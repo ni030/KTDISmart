@@ -1,17 +1,12 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Image, Platform } from 'react-native';
-
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-
 export default function TabTwoScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage} />}>
+    return (<ParallaxScrollView headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }} headerImage={<Ionicons size={310} name="code-slash" style={styles.headerImage}/>}>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Explore</ThemedText>
       </ThemedView>
@@ -42,7 +37,7 @@ export default function TabTwoScreen() {
           <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
           different screen densities
         </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
+        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }}/>
         <ExternalLink href="https://reactnative.dev/docs/images">
           <ThemedText type="link">Learn more</ThemedText>
         </ExternalLink>
@@ -76,27 +71,23 @@ export default function TabTwoScreen() {
           to create a waving hand animation.
         </ThemedText>
         {Platform.select({
-          ios: (
-            <ThemedText>
+            ios: (<ThemedText>
               The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
               component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
+            </ThemedText>),
         })}
       </Collapsible>
-    </ParallaxScrollView>
-  );
+    </ParallaxScrollView>);
 }
-
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
+    headerImage: {
+        color: '#808080',
+        bottom: -90,
+        left: -35,
+        position: 'absolute',
+    },
+    titleContainer: {
+        flexDirection: 'row',
+        gap: 8,
+    },
 });
