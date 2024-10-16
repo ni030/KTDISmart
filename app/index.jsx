@@ -9,7 +9,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>Welcome to KTDI Smart</Text>
+      <Text>Welcome to KTDI de Smart</Text>
     </View>
   );
 }
