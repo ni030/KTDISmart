@@ -9,8 +9,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <h1>Hello hz</h1>
-      <Text>Welcome to KTDI the Smart</Text>
+      <Text>Welcome to KTDI the Smart. Haha</Text>
     </View>
   );
 }
