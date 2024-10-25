@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { SafeAreaView, TextInput, View, Alert, TouchableOpacity, Text } from "react-native";
-import axios from "axios";
 import { Button } from "react-native-paper";
+import { createUser } from "../../services/manageUser";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -13,21 +13,18 @@ const SignUp = () => {
       Alert.alert("Error", "Please enter both username and password");
       return;
     }
-  
+
     setLoading(true);
-  
+
     try {
-      // Replace with 10.0.2.2 for Android emulator, or your machine's IP for physical devices
-      const response = await axios.post("http://10.0.2.2:3000/api/signup", {
-        username,
-        password,
-      });
-  
-      if (response.status === 201) {
-        Alert.alert("Success", "Sign up successful");
+      const res = await createUser(username, password);
+      if (res === "Success") {
+        Alert.alert("Success", "User created successfully");
+      } else {
+        Alert.alert("Error", "Sign up failed");
       }
     } catch (error) {
-      console.error("Error during sign-up:", error);
+      console.error("Error at sign-up:", error);
       Alert.alert("Error", "Sign up failed");
     } finally {
       setLoading(false);
