@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { SafeAreaView, TextInput, Button, View, Alert } from "react-native";
+import { SafeAreaView, TextInput, View, Alert, TouchableOpacity, Text } from "react-native";
 import axios from "axios";
+import { Button } from "react-native-paper";
 
 const SignUp = () => {
   const [username, setUsername] = useState("");
@@ -59,7 +60,13 @@ const SignUp = () => {
           value={password}
           onChangeText={setPassword}
         />
-        <Button title={loading ? "Signing up..." : "Sign Up"} onPress={handleSignUp} disabled={loading} />
+        
+        <Button icon="camera" mode="contained" onPress={handleSignUp} color="">
+          <TouchableOpacity>
+            <Text className="text-white">Sign Up</Text>
+          </TouchableOpacity>
+          </Button>
+        
       </View>
     </SafeAreaView>
   );
