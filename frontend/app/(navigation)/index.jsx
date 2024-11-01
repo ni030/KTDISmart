@@ -10,7 +10,7 @@ export default function index() {
 
   return (
     <SafeAreaView>
-      <Text>Welcome to Navigation Page</Text>
+      <Text>Welcome to Navigation Page hahaha</Text>
       <GoogleTextInput 
         containerStyle="bg-white shadow-md shadow-neutral-300"
         handlePress={handleDestinationPress}
