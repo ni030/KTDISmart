@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
+import { SafeAreaView, View, Text } from 'react-native';
 import googleTextInput from './googleTextInput';
 
 export default function index() {
@@ -14,13 +14,13 @@ export default function index() {
         containerStyle="bg-white shadow-md shadow-neutral-300"
         handlePress={handleDestinationPress}
       />
-      <Text className="text-xl font-JakartaBold mt-5 mb-3">
+      <Text>
         Your Current Location
       </Text>
       <View className="flex flex-row items-center bg-transparent h-[300px]">
         <Map />
       </View>
-      <Text className="text-xl font-JakartaBold mt-5 mb-3">
+      <Text>
         Recent Searches
       </Text>
     </SafeAreaView>
