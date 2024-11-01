@@ -18,6 +18,12 @@ export default function App() {
               <Text className="text-xl text-white font-bold text-center">Sign In</Text>
             </Link>
           </TouchableOpacity>
+
+          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
+            <Link href="/(navigation)">
+              <Text className="text-xl text-white font-bold text-center">Navigation</Text>
+            </Link>
+          </TouchableOpacity>
        
           <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
             <Link href="/(ktdi-merit)">
