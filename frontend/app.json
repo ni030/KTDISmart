@@ -26,7 +26,13 @@
       "output": "server"
     },
     "plugins": [
-      ["expo-router",  {"origin": "https://ktdismart.com/"}]
+      [
+        "expo-router",
+        {
+          "origin": "https://ktdismart.com/"
+        }
+      ],
+      "expo-font"
     ]
   }
 }
