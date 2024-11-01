@@ -1,11 +1,19 @@
 import {Text,View} from "react-native";
 
-const googleTextInput=()=>{
-    <View>
+const GoogleTextInput=({
+    icon,
+    initialLocation,
+    containerStyle,
+    textInputBackgroundColor,
+    handlePress,
+})=>{
+    return(
+    <View className={'flex flex-row items-center justify-center relative z-50 rounder-xl ${containerStyle} mb-5'}>
         <Text>
             Search
         </Text>
     </View>
-};
+    );
+}
 
-export default googleTextInput;
+export default GoogleTextInput;

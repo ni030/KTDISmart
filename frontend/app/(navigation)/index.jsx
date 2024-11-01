@@ -1,6 +1,7 @@
 import React from 'react';
 import { SafeAreaView, View, Text } from 'react-native';
-import googleTextInput from './googleTextInput';
+import GoogleTextInput from './GoogleTextInput';
+import Map from './map'
 
 export default function index() {
   const handleDestinationPress=()=>{
@@ -10,7 +11,7 @@ export default function index() {
   return (
     <SafeAreaView>
       <Text>Welcome to Navigation Page</Text>
-      <googleTextInput
+      <GoogleTextInput 
         containerStyle="bg-white shadow-md shadow-neutral-300"
         handlePress={handleDestinationPress}
       />
