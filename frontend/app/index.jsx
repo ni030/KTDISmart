@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Link } from 'expo-router';
 import { Redirect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { useFonts } from 'expo-font';
+import AppLoading from 'expo-app-loading';
+import * as SplashScreen from 'expo-splash-screen';
+import { PaperProvider } from 'react-native-paper';
 
 export default function App() {
-  // return <Redirect href="/(auth)/sign-up" />;
+  const [fontsLoaded] = useFonts({
+    'RootLight': require('../fonts/FredokaLight.ttf'),
+    'RootRegular': require('../fonts/FredokaRegular.ttf'),
+    'RootMedium': require('../fonts/FredokaMedium.ttf'),
+    'RootSemiBold': require('../fonts/FredokaSemiBold.ttf'),
+    'RootBold': require('../fonts/FredokaBold.ttf'),
+  });
+
+  useEffect(() => {
+    // Prevent the splash screen from hiding until fonts are loaded
+    SplashScreen.preventAutoHideAsync();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      // Hide the splash screen when fonts are loaded
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null; // Return null so nothing renders until fonts are ready
+  }
+
+  return(
+    <PaperProvider>
+     <Text> <Redirect href="/(ktdi-merit)" />;</Text>
+    </PaperProvider>
+  )
   // temporary before navbar is done
   return (
     <SafeAreaView className="w-full h-screen flex flex-1 justify-start items-center bg-blue-100">
