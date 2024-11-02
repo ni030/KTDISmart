@@ -35,7 +35,7 @@ export default function App() {
 
   return(
     <PaperProvider>
-     <Text> <Redirect href="/(ktdi-merit)" />;</Text>
+     <Text> <Redirect href="/(navigation)" />;</Text>
     </PaperProvider>
   )
   // temporary before navbar is done
