@@ -33,11 +33,11 @@ export default function App() {
     return null; // Return null so nothing renders until fonts are ready
   }
 
-  // return(
-  //   <PaperProvider>
-  //    <Text> <Redirect href="/(ktdi-merit)" />;</Text>
-  //   </PaperProvider>
-  // )
+  return(
+    <PaperProvider>
+     <Text> <Redirect href="/(ktdi-merit)" />;</Text>
+    </PaperProvider>
+  )
   // temporary before navbar is done
   return (
     <SafeAreaView className="w-full h-screen flex flex-1 justify-start items-center bg-blue-100">
