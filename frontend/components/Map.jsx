@@ -16,8 +16,8 @@ const Map=()=>{
         <MapView
         provider={PROVIDER_DEFAULT}
         className="w-full h-full rounded-2xl"
-        tintColor="black"
-        mapType="mutedStandard"
+        // tintColor="black"
+        // mapType="mutedStandard"
         showsPointsOfInterest={false}
         initialRegion={region}
         showsUserLocation={true}
