@@ -13,8 +13,8 @@ const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
   }) => {
     if (!userLatitude || !userLongitude) {
       return {
-        latitude: 37.78825,
-        longitude: -122.4324,
+        latitude: 1.5681364610754704,
+        longitude: 103.64419529044466,
         latitudeDelta: 0.01,
         longitudeDelta: 0.01,
       };
