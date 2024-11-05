@@ -33,11 +33,12 @@ export default function App() {
     return null; // Return null so nothing renders until fonts are ready
   }
 
-  return(
-    <PaperProvider>
-     <Text> <Redirect href="/(ktdi-merit)" />;</Text>
-    </PaperProvider>
-  )
+  // return(
+  //   <PaperProvider>
+  //    <Text> <Redirect href="/(ktdi-merit)" />;</Text>
+  //   </PaperProvider>
+  // )
+
   // temporary before navbar is done
   return (
     <SafeAreaView className="w-full h-screen flex flex-1 justify-start items-center bg-blue-100">
@@ -45,8 +46,9 @@ export default function App() {
         <Text className="text-center text-3xl text-red-900 font-semibold">Welcome to KTDI SMART</Text>
       </View>
       <View className="w-4/5 flex justify-center items-center gap-3">
+  
           <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
-            <Link href="/(auth)/sign-in">
+            <Link href="/(auth)/login">
               <Text className="text-xl text-white font-bold text-center">Sign In</Text>
             </Link>
           </TouchableOpacity>
