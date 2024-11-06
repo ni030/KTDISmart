@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, Alert, Scro, ScrollView} from 'react-native';
-import { Octicons, Fontisto, Ionicons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity, Image, ImageBackground, Alert} from 'react-native';
+import {AntDesign} from '@expo/vector-icons';
 import MyTextInput from '../../components/auth_component/LoginForm';
 
 const Login = () => {
@@ -69,8 +68,8 @@ const Login = () => {
             <TouchableOpacity 
               style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#F3F4F6', padding: 12, borderRadius: 8, marginTop: 16 }}
             >
-              <Fontisto name="google" size={23} color="#AA4760" />
-              <Text style={{ marginLeft: 8, color: '#A1335D', fontWeight: 'bold' }}>Forgot Password?</Text>
+              <AntDesign name='questioncircle' size={20} color="#AA4760" />
+              <Text style={{ marginLeft: 8, color: '#A1335D', fontWeight: 'bold' }}>Forgot Password</Text>
             </TouchableOpacity>
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 16 }}>
