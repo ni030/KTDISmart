@@ -2,7 +2,7 @@ import * as Location from 'expo-location'
 import React from 'react';
 import { SafeAreaView, Text, View } from 'react-native';
 import GoogleTextInput from '../../components/navigation/GoogleTextInput';
-import Map from '../../components/Map';
+import Map from '../../components/navigation/Map';
 import { useLocationStore } from '../../store';
 import { useEffect, useState } from 'react';
 
