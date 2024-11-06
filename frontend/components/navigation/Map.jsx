@@ -1,7 +1,7 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import MapView, { PROVIDER_DEFAULT } from 'react-native-maps';
-import { useLocationStore } from "../store";
-import { calculateRegion } from "../lib/map";
+import { useLocationStore } from "../../store";
+import { calculateRegion } from "../../lib/map";
 
 const Map=()=>{
     const {
