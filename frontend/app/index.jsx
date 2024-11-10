@@ -68,7 +68,7 @@ export default function App() {
        
           <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
             <Link href="/(ktdi-merit)">
-              <Text className="text-xl text-white font-bold text-center">KTDI Merit</Text>
+              <Text className="text-xl text-white font-bold text-center">KTDI Merit Hi</Text>
             </Link>
           </TouchableOpacity>
       </View>
