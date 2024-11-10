@@ -4,14 +4,14 @@ import {AntDesign} from '@expo/vector-icons';
 import MyTextInput from '../../components/auth_component/LoginForm';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
 
   const handleLogin = () => {
     // Handle login logic here
-    Alert.alert("Login Info", `Email: ${email}\nPassword: ${password}`);
-  };
+    Alert.alert("Login Info", `Username: ${username}\nPassword: ${password}`);
+};
   
   return (
       <ImageBackground
@@ -32,12 +32,13 @@ const Login = () => {
           
           <View style={{ width: '80%', marginTop: 24 }}>
             <MyTextInput
-              label="  Email Address"
-              placeholder="centerpoint@gmail.com"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              icon="mail"
+              label="  Username"
+              placeholder="Enter your username"
+              value={username}  
+              onChangeText={setUsername}  
+              keyboardType="default" 
+              icon="user" 
+              iconType="FontAwesome"
             />
             <MyTextInput
               label="    Password"
@@ -50,7 +51,7 @@ const Login = () => {
               hidePassword={hidePassword}
               setHidePassword={setHidePassword}
             />
-            <Text style={{ color: 'red', textAlign: 'center', marginTop: 8 }}>...</Text>
+            <Text style={{ color: 'white', textAlign: 'center', marginTop: 8 }}>...</Text>
 
             <TouchableOpacity 
               style={{ backgroundColor: '#A1335D', padding: 12, borderRadius: 8, alignItems: 'center', marginTop: 16 }}
