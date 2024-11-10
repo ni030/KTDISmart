@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { DEVICE_IP } from '@env'
 
 export const checkExistingForm = async (matricNum) => {
     try {
-        const response = await axios.get(`http://10.0.2.2:3000/db/chooseRoom/check/${matricNum}`);
+        const response = await axios.get(`${DEVICE_IP}:3000/db/chooseRoom/check/${matricNum}`);
         if (response.status == 204) {
             return "empty"
         }else{
@@ -15,7 +16,7 @@ export const checkExistingForm = async (matricNum) => {
 
 export const createForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdBlock, rdType) => {
     try{
-        const response = await axios.post(`http://10.0.2.2:3000/db/chooseRoom/create`, {
+        const response = await axios.post(`${DEVICE_IP}:3000/db/chooseRoom/create`, {
             matricNo,
             stBlock,
             stType,
@@ -35,7 +36,7 @@ export const createForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdB
 
 export const updateForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdBlock, rdType) => {
     try{
-        const response = await axios.put(`http://10.0.2.2:3000/db/chooseRoom/update/${matricNo}`, {
+        const response = await axios.put(`${DEVICE_IP}:3000/db/chooseRoom/update/${matricNo}`, {
             stBlock,
             stType,
             ndBlock,

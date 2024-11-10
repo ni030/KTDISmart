@@ -34,13 +34,14 @@ export default function App() {
   }
 
   // return(
-  //   <PaperProvider>
+  //   
   //    <Text> <Redirect href="/(ktdi-merit)" />;</Text>
   //   </PaperProvider>
   // )
 
   // temporary before navbar is done
   return (
+  <PaperProvider>
     <SafeAreaView className="w-full h-screen flex flex-1 justify-start items-center bg-blue-100">
       <View className="w-full h-1/3 flex justify-center items-center">
         <Text className="text-center text-3xl text-red-900 font-semibold">Welcome to KTDI SMART</Text>
@@ -54,6 +55,12 @@ export default function App() {
           </TouchableOpacity>
 
           <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
+            <Link href="/(auth)/register">
+              <Text className="text-xl text-white font-bold text-center">Register</Text>
+            </Link>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
             <Link href="/(navigation)">
               <Text className="text-xl text-white font-bold text-center">Navigation</Text>
             </Link>
@@ -61,7 +68,7 @@ export default function App() {
        
           <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
             <Link href="/(ktdi-merit)">
-              <Text className="text-xl text-white font-bold text-center">KTDI Merit</Text>
+              <Text className="text-xl text-white font-bold text-center">KTDI Merit Hi</Text>
             </Link>
           </TouchableOpacity>
           
@@ -72,5 +79,6 @@ export default function App() {
           </TouchableOpacity>
       </View>
     </SafeAreaView>
+    </PaperProvider>
   );
 }

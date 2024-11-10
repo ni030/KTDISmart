@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { DEVICE_IP } from '@env'
+
+
 
 export const createUser = async (username, password) => {
   try {
-    // Replace with 10.0.2.2 for Android emulator, or your machine's IP for physical devices
-    const response = await axios.post("http://10.0.2.2:3000/db/user/signup", {
+    const response = await axios.post(`${DEVICE_IP}:3000/db/user/signup`, {
       username,
       password,
     });
