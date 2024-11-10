@@ -64,6 +64,12 @@ export default function App() {
               <Text className="text-xl text-white font-bold text-center">KTDI Merit</Text>
             </Link>
           </TouchableOpacity>
+          
+          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
+            <Link href="/(complaint)">
+              <Text className="text-xl text-white font-bold text-center">Complaint</Text>
+            </Link>
+          </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
