@@ -30,7 +30,7 @@ export const createForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdB
             return "Success"
         }
     }catch(error){
-        console.error("Error create form:", error,message)
+        console.error("Error create form:", error.message)
     }
 }
 
