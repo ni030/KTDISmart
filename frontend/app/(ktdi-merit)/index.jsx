@@ -36,7 +36,11 @@ export default function Index() {
           <FontAwesome6 name="bed" size={72} color="white" />
           <View className="p-5">
 <<<<<<< HEAD
+<<<<<<< HEAD
             <Text className="text-xl font-bold text-white">Name: LIM SI NI</Text>
+=======
+            <Text className="font-rootSB text-xl text-white">Name: LIM SI NI</Text>
+>>>>>>> parent of 4969116 (a little bit change)
 =======
             <Text className="font-rootSB text-xl text-white">Name: LIM SI NI</Text>
 >>>>>>> parent of 4969116 (a little bit change)

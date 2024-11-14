@@ -76,8 +76,6 @@ export default function App() {
           <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
             <Link href="/(complaint)">
               <Text className="text-xl text-white font-bold text-center">Complaint</Text>
-=======
->>>>>>> parent of 4969116 (a little bit change)
             </Link>
           </TouchableOpacity>
       </View>
