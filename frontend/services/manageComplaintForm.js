@@ -17,7 +17,6 @@ import { DEVICE_IP } from '@env'
 export const createForm = async(matric, cat, type, desc, pic)=> {
     console.log("hi")
     try{
-
         const response = await axios.post(`${DEVICE_IP}:3000/db/complaint/create`, {
             matric,
             cat,
