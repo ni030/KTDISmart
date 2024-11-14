@@ -35,7 +35,11 @@ export default function Index() {
         <View className="w-full h-auto p-5 flex flex-row justify-between items-center text-slate-800">
           <FontAwesome6 name="bed" size={72} color="white" />
           <View className="p-5">
+<<<<<<< HEAD
             <Text className="text-xl font-bold text-white">Name: LIM SI NI</Text>
+=======
+            <Text className="font-rootSB text-xl text-white">Name: LIM SI NI</Text>
+>>>>>>> parent of 4969116 (a little bit change)
             <Text className="text-white text-base font-rootR">Matric Number: A22EC0070</Text>
             <Text className="text-white text-base font-rootR">Chosen Room: 123, MA4</Text>
           </View>
