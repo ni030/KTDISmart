@@ -17,7 +17,7 @@ const QuestionDialog = ({
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog}>
           <Dialog.Content>
-            <View>
+            <DataTable>
               <DataTable.Header>
                 <DataTable.Cell>
                   <Text className="font-bold text-base">Room Type</Text>
@@ -42,7 +42,7 @@ const QuestionDialog = ({
                 <DataTable.Cell>Double</DataTable.Cell>
                 <DataTable.Cell>RM 4.00</DataTable.Cell>
               </DataTable.Row>
-            </View>
+            </DataTable>
           </Dialog.Content>
         </Dialog>
       </Portal>
