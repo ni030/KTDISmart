@@ -7,7 +7,7 @@ export default function RootLayout() {
       <Stack.Screen name="(auth)" options={{headerShown: false}} />
       <Stack.Screen name="(complaint)" options={{headerShown: false}} />
       <Stack.Screen name="(ktdi-merit)" options={{headerShown: false}} />
-      
+      <Stack.Screen name="(navigation)" options={{headerShown:false}}/>
     </Stack>
   );
 }

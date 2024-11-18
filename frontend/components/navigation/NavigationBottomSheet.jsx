@@ -1,8 +1,9 @@
-import { useCallback, useMemo, useRef } from "react"
+import React, { useCallback, useMemo, useRef } from "react"
 import { StyleSheet, View, Text, Keyboard } from "react-native";
 import BottomSheet, {BottomSheetView} from "@gorhom/bottom-sheet";
 import GoogleTextInput from "./GoogleTextInput";
 import { useLocationStore } from "../../store";
+import { saveSearchLocation } from "../../services/manageLocation";
 
 const NavigationBottomSheet = ({
     mapRef,
@@ -49,10 +50,14 @@ const NavigationBottomSheet = ({
             longitudeDelta,
         },2000);
     }
-
+    const matric = 'A22EC0001';
     const handleDestinationPress=({latitude,longitude,address})=>{
         setDestinationLocation(latitude,longitude,address);
         moveToLocation(latitude,longitude)
+        console.log(latitude)
+        console.log(longitude)
+        console.log(address)
+        saveSearchLocation(matric,latitude,longitude,address)
     };
 
     const Row = ({ children }) => (

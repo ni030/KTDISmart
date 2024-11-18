@@ -4,14 +4,17 @@ import { StyleSheet } from "react-native";
 import NavigationMap from "../../components/navigation/NavigationMap";
 import { useLocationStore } from '../../store';
 import React, { useEffect, useState } from 'react';
+import { saveCurrentLocation } from '../../services/manageLocation';
 
 export default function index() {
+    const matric = 'A22EC0001';
     const {
         userLongitude, userLatitude, userAddress, destinationLatitude, destinationLongitude, destinationAddress
     } = useLocationStore();
 
     const { setUserLocation, setDestinationLocation } = useLocationStore();
     const { hasPermissions, setHasPermissions } = useState(false);
+    
     useEffect(()=>{
         const requestLocation = async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -28,6 +31,11 @@ export default function index() {
                     latitude: location.coords.latitude,
                     longitude: location.coords.longitude,
                 });
+                const latitude = location.coords.latitude;
+                const longitude = location.coords.longitude;
+                console.log(matric)
+                console.log(latitude)
+                console.log(longitude)
 
                 //Check if the address array is not empty
                 if(address.length>0){
@@ -35,6 +43,7 @@ export default function index() {
                         latitude: location.coords.latitude,
                         longitude: location.coords.longitude,
                         address: '${address[0].name}, ${address[0].region}',
+
                     });
                 }else{
                     //Handle the case where no address is found
@@ -44,6 +53,7 @@ export default function index() {
                         address: 'Address not found',
                     });
                 }
+                saveCurrentLocation(matric,latitude,longitude)
             }
         };
 

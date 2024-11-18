@@ -4,6 +4,7 @@ import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { icons } from "../../constants/index";
 import { useState } from "react";
+import { saveSearchLocation } from "../../services/manageLocation";
 
 
 const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY
