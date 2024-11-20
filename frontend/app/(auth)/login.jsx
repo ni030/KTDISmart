@@ -7,7 +7,7 @@ import authService from '../../services/authServices';
 import * as SecureStore from 'expo-secure-store';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,7 +40,7 @@ const Login = () => {
       navigation.replace('index');
     } catch (error) {
       console.error('Login error:', error);
-      Alert.alert('Error', error.message || 'Invalid username or password');
+      Alert.alert('Error', error.message || 'Failed to log in');
     } finally {
       setIsLoading(false);
     }
