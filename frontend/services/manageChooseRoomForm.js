@@ -8,7 +8,7 @@ export const checkExistingForm = async (matricNum) => {
             return "empty"
         }else{
             return response.data
-        }
+        } 
     } catch (error) {
         console.error("Error checking existing form:", error.message);
     }
@@ -19,8 +19,8 @@ export const createForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdB
         const response = await axios.post(`${DEVICE_IP}:3000/db/chooseRoom/create`, {
             matricNo,
             stBlock,
-            stType,
-            ndBlock,
+            stType, 
+            ndBlock, 
             ndType,
             rdBlock,
             rdType

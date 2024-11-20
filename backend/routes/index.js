@@ -7,4 +7,4 @@ const chooseRoomFormRoute = require("./chooseRoomForm");
 router.use("/user", userRoute);
 router.use("/chooseRoom", chooseRoomFormRoute);
 
-module.exports = router;
+module.exports = router; 
