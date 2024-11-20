@@ -1,6 +1,6 @@
 import * as Location from 'expo-location'
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import NavigationMap from "../../components/navigation/NavigationMap";
 import { useLocationStore } from '../../store';
 import React, { useEffect, useState } from 'react';
@@ -13,7 +13,8 @@ export default function index() {
     } = useLocationStore();
 
     const { setUserLocation, setDestinationLocation } = useLocationStore();
-    const { hasPermissions, setHasPermissions } = useState(false);
+    const [ hasPermissions, setHasPermissions ] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     
     useEffect(()=>{
         const requestLocation = async () => {
@@ -21,8 +22,16 @@ export default function index() {
 
             if(status!='granted'){
                 setHasPermissions(false)
+                setErrorMessage('Location access is required to use this feature. Please enable it in settings.');
+                Alert.alert(
+                    'Location Permission Required',
+                    'Location access is needed to display your current location on the map. Please enable it in your device settings.',
+                    [{ text: 'OK' }]
+                );
                 return;
             }
+
+            setHasPermissions(true);
 
             let location = await Location.getCurrentPositionAsync();
 
@@ -33,9 +42,6 @@ export default function index() {
                 });
                 const latitude = location.coords.latitude;
                 const longitude = location.coords.longitude;
-                console.log(matric)
-                console.log(latitude)
-                console.log(longitude)
 
                 //Check if the address array is not empty
                 if(address.length>0){
