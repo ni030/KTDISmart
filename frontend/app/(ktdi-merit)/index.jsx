@@ -35,9 +35,9 @@ export default function Index() {
         <View className="w-full h-auto p-5 flex flex-row justify-between items-center text-slate-800">
           <FontAwesome6 name="bed" size={72} color="white" />
           <View className="p-5">
-            <Text className="text-xl font-bold text-white">Name: LIM SI NI</Text>
-            <Text className="text-white text-base font-rootR">Matric Number: A22EC0070</Text>
-            <Text className="text-white text-base font-rootR">Chosen Room: 123, MA4</Text>
+            <Text className=" text-xl text-white">Name: LIM SI NI</Text>
+            <Text className="text-white text-base">Matric Number: A22EC0070</Text>
+            <Text className="text-white text-base">Chosen Room: 123, MA4</Text>
           </View>
           <IconButton
             icon={() => <FontAwesome6 name="ellipsis-vertical" size={24} color="white" />}

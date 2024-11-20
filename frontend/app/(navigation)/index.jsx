@@ -1,23 +1,73 @@
-
-
+import * as Location from 'expo-location'
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import NavigationMap from "../../components/navigation/NavigationMap";
-import NavigationBottomSheet from "../../components/navigation/NavigationBottomSheet";
-
+import { useLocationStore } from '../../store';
+import React, { useEffect, useState } from 'react';
+import { saveCurrentLocation } from '../../services/manageLocation';
 
 export default function index() {
+    const matric = 'A22EC0001';
+    const {
+        userLongitude, userLatitude, userAddress, destinationLatitude, destinationLongitude, destinationAddress
+    } = useLocationStore();
+
+    const { setUserLocation, setDestinationLocation } = useLocationStore();
+    const { hasPermissions, setHasPermissions } = useState(false);
+    
+    useEffect(()=>{
+        const requestLocation = async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+
+            if(status!='granted'){
+                setHasPermissions(false)
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync();
+
+            if(location&&location.coords){
+                const address = await Location.reverseGeocodeAsync({
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                });
+                const latitude = location.coords.latitude;
+                const longitude = location.coords.longitude;
+                console.log(matric)
+                console.log(latitude)
+                console.log(longitude)
+
+                //Check if the address array is not empty
+                if(address.length>0){
+                    setUserLocation({
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                        address: '${address[0].name}, ${address[0].region}',
+
+                    });
+                }else{
+                    //Handle the case where no address is found
+                    setUserLocation({
+                        latitude: location.coords.latitude,
+                        longitude: location.coords.longitude,
+                        address: 'Address not found',
+                    });
+                }
+                saveCurrentLocation(matric,latitude,longitude)
+            }
+        };
+
+        requestLocation();
+    }, []);
     return(
-        <GestureHandlerRootView>
+        <GestureHandlerRootView style={styles.container} pointerEvents="box-none">
             <NavigationMap/>
-            <NavigationBottomSheet/>
         </GestureHandlerRootView>
-        // <SafeAreaView>
-        //     <View>
-        //         <NavigationMap/>
-        //         <Text>HAHAHAH</Text>
-        //     </View>
-        //     <NavigationMap/>
-        // </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    container:{
+        flex:1,
+    }
+})

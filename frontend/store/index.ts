@@ -5,7 +5,7 @@ export const useLocationStore = create<LocationStore>((set)=>({
     userAddress: null,
     userLongitude: null,
     userLatitude: null,
-    userAddrress: null,
+
     destinationLongitude: null,
     destinationLatitude: null,
     destinationAddress: null,

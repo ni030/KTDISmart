@@ -7,7 +7,7 @@ import authService from '../../services/authServices';
 import * as SecureStore from 'expo-secure-store';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);

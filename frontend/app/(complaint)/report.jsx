@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { TextInput, PaperProvider, Button } from 'react-native-paper';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ToastAndroid } from 'react-native';
 import { Dropdown } from 'react-native-paper-dropdown';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +15,7 @@ import { createForm } from '../../services/manageComplaintForm';
 
 export default function Report() {
     //temp data
+    const [matric, setMatric] = React.useState('A22EC0272');
     const [name, setName] = React.useState('Feizhen');
     const [phoneNum, setPhone] = React.useState('012-3456789');
     const [desc, setDesc] = React.useState('');
@@ -28,6 +29,19 @@ export default function Report() {
     
     const route = useRoute();
     const { cat } = route.params;
+
+    const createComplaintForm = async () => {
+        console.log("create form")
+        try{
+          const res = await createForm(matric, cat, type, desc, pic);
+          if(res === "Success"){
+            ToastAndroid.show('Complaint Submitted Successfully!', ToastAndroid.LONG, ToastAndroid.CENTER);
+          }
+  
+        }catch(error){
+          console.error("Error in createComplaintForm:", error)
+        }
+      }
 
     useEffect(() => {
         // Set options based on the category
@@ -103,16 +117,16 @@ export default function Report() {
 
   // Check if the form is valid (all required fields filled)
   const isFormValid = () => {
-    return name && phoneNum && dorm && type && desc && pic;
+    return name && phoneNum && dorm && type && desc;
   };
 
     return (
         <GestureHandlerRootView>
         <PaperProvider>
             <ScrollView className="flex-grow-1 bg-primary-500">
-            <SafeAreaView className="p-5 w-screen h-auto">
+            <SafeAreaView className="pl-5 pr-5 w-screen h-auto">
                 
-                <Text className="text-2xl text-white font-bold">Personal Information</Text>
+                {/* <Text className="text-2xl text-white font-bold">Personal Information</Text> */}
                     
                     <Text className="text-xl text-white m-1">Name:</Text>
                     <TextInput
@@ -200,7 +214,7 @@ export default function Report() {
                 <DeclareDialog
                             visible={dialogVisible}
                             setVisible={setDialogVisible}
-                            func={createForm}
+                            func={() => createComplaintForm(matric, cat, type, desc, pic)}
                         />
             </SafeAreaView>
             </ScrollView>
