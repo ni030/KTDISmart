@@ -12,8 +12,8 @@ const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY
 const styles = StyleSheet.create({
     viewContainer:{
         flexDirection:'row',
-        borderRadius:15,
-        backgroundColor:'lightgray',
+        borderRadius:20,
+        backgroundColor:'#a1335d',
         marginTop:10,
         marginBottom:10,
         width:'90%',
@@ -58,12 +58,13 @@ const GoogleTextInput=({
                     
                 },
                 textInput:{
-                    backgroundColor:textInputBackgroundColor||'lightgray',
+                    backgroundColor:textInputBackgroundColor||'#a1335d',
                     fontSize:16,
                     fontWeight:'400',
                     marginTop:5,
                     width:"100%",
                     borderRadius:200,
+                    color:'white'
                 },
                 listView: {
                     backgroundColor: textInputBackgroundColor || 'white',
@@ -99,13 +100,13 @@ const GoogleTextInput=({
                         source={require("../../assets/search.png")} 
                         className="w-5 h-5" 
                         resizeMode="contain" 
-                        backgroundColor="lightgray"
+                        backgroundColor="#a1335d"
                         zIndex={100}
                     />
                 </View>
             )}
             textInputProps={{
-                placeholderTextColor:'dimgray',
+                placeholderTextColor:'white',
                 placeholder: initialLocation?? "Search Maps",
                 onFocus: handleFocus, // Call handleFocus on input focus
                 onBlur: handleBlur,   // Call handleBlur on input blur

@@ -10,9 +10,7 @@ const NavigationBottomSheet = ({
     userLatitude,
     userLongitude
 }) => {
-    console.log(userLatitude)
-    console.log(userLongitude)
-    const snapPoints = useMemo(()=>['14%','50%','92%']);
+    const snapPoints = useMemo(()=>['13%','50%','92%']);
     const bottomSheetRef = useRef(null);
     const handleSheetChanges = useCallback((index) => {
         if(index!==2){
@@ -71,38 +69,55 @@ const NavigationBottomSheet = ({
     }
 
     const styles = StyleSheet.create({
+        handleIndicator: {
+            backgroundColor: 'dimgray', // Chansge to your desired color
+            marginTop: 3
+        },
+        handle: {
+            backgroundColor: '#f7dae5', // Change to your desired color
+            height: 20, // Adjust height as needed
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderColor:'#f7dae5'
+        },
         container: {
             flex:1,
             zIndex:1,
             pointerEvents:'box-none', //alow map below to interact
             // alignContent:'center'
+            borderColor:'#f7dae5',
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
         },
         bottomSheet:{
             flex:1,
             zIndex:2,
             backgroundColor:'transparent',
             pointerEvents:'auto', //ensure bottom sheet itself is interactive
+            // backgroundColor:'#f7dae5'
         },
         contentContainer: {
             flex: 1,
             zIndex:3,
             alignItems: 'center',
-            backgroundColor:'white',
-            borderRadius:15,
+            backgroundColor:'#f7dae5',
+            // backgroundColor:'white',
         },
         title:{
             marginTop: 13,
             marginLeft: 22,
             marginBottom:10,
-            fontWeight:'500',
-            textAlignt:'left'
+            fontWeight:'600',
+            textAlignt:'left',
+            fontSize:15
         },
         appName:{
             marginTop: 13,
             marginBottom:10,
         },
         label:{
-            fontWeight:'200',
+            fontWeight:'500',
+            color:'white'
         },
         favouriteContainer: {
             // flex:3,
@@ -111,7 +126,7 @@ const NavigationBottomSheet = ({
             justifyContent:'center',
             width:"90%",
             height: 160,           
-            backgroundColor:'lightgray',
+            backgroundColor:'#a1335d',
             borderRadius:20,
             marginBottom:10
         },
@@ -122,7 +137,7 @@ const NavigationBottomSheet = ({
             justifyContent:'center',
             width:"90%",
             height: 160,           
-            backgroundColor:'lightgray',
+            backgroundColor:'#a1335d',
             borderRadius:20,
             marginBottom:15
         },
@@ -130,7 +145,7 @@ const NavigationBottomSheet = ({
             alignContent:'center',
             justifyContent:'center',
             width:"90%",
-            backgroundColor:'lightgray',
+            backgroundColor:'#a1335d',
             borderRadius:20,
             marginTop:10,
             marginBottom:10,
@@ -148,6 +163,8 @@ const NavigationBottomSheet = ({
                 style={styles.bottomSheet}
                 enablePanDownToClose={false}
                 animateOnMount={false}
+                handleIndicatorStyle={styles.handleIndicator}
+                handleStyle={styles.handle}
             >
                 <BottomSheetView style={styles.contentContainer}>
                     <GoogleTextInput
@@ -169,14 +186,14 @@ const NavigationBottomSheet = ({
                         <Text></Text>
                     </View>
                     <View style={styles.functionContainer}>
-                        <Text className="text-center font-medium">Mark My Location</Text>
+                        <Text className="text-center" style={{ color: "white", fontWeight:600 }}>Mark My Location</Text>
                     </View>
 
                     <View style={styles.functionContainer}>
-                        <Text className="text-center font-medium">Share My Location</Text>
+                        <Text className="text-center" style={{ color: "white", fontWeight:600}}>Share My Location</Text>
                     </View>
                     <View style={styles.appName}>
-                        <Text style={styles.label}>KTDI Smart</Text>
+                        <Text style={{color:"#a1335d",fontWeight:400}}>KTDI Smart</Text>
                     </View>
                 </BottomSheetView>
             </BottomSheet>
