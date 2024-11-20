@@ -59,11 +59,11 @@ const GoogleTextInput=({
                 },
                 textInput:{
                     backgroundColor:textInputBackgroundColor||'#a1335d',
-                    fontSize:16,
-                    fontWeight:'400',
+                    fontSize:15,
+                    fontWeight:'300',
                     marginTop:5,
                     width:"100%",
-                    borderRadius:200,
+                    borderRadius:20,
                     color:'white'
                 },
                 listView: {
@@ -71,7 +71,7 @@ const GoogleTextInput=({
                     position:'relative',
                     top: 0,
                     width:"100%",
-                    borderBottomRadius:10,
+                    borderBottomRadius:20,
                     shadowColor:'black',
                     zIndex:99,
                     shadowColor: "#d4d4d4", // neutral-300 color approximation
@@ -98,7 +98,7 @@ const GoogleTextInput=({
                 <View className="justify-center items-center w-6 h-6">
                     <Image 
                         source={require("../../assets/search.png")} 
-                        className="w-5 h-5" 
+                        className="w-8 h-8" 
                         resizeMode="contain" 
                         backgroundColor="#a1335d"
                         zIndex={100}

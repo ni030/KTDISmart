@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { saveCurrentLocation } from '../../services/manageLocation';
 
 export default function index() {
-    const matric = 'A22EC0001';
+    const matric = 'A22EC0002';
     const {
         userLongitude, userLatitude, userAddress, destinationLatitude, destinationLongitude, destinationAddress
     } = useLocationStore();

@@ -10,7 +10,7 @@ const NavigationBottomSheet = ({
     userLatitude,
     userLongitude
 }) => {
-    const snapPoints = useMemo(()=>['13%','50%','92%']);
+    const snapPoints = useMemo(()=>['14%','50%','92%']);
     const bottomSheetRef = useRef(null);
     const handleSheetChanges = useCallback((index) => {
         if(index!==2){
@@ -48,7 +48,7 @@ const NavigationBottomSheet = ({
             longitudeDelta,
         },2000);
     }
-    const matric = 'A22EC0001';
+    const matric = 'A22EC0002';
     const handleDestinationPress=({latitude,longitude,address})=>{
         setDestinationLocation(latitude,longitude,address);
         moveToLocation(latitude,longitude)
@@ -58,50 +58,36 @@ const NavigationBottomSheet = ({
         saveSearchLocation(matric,latitude,longitude,address)
     };
 
-    const Row = ({ children }) => (
-        <View style={styles.row}>{children}</View>
-    );
-
-    const Col = ({ numRows, children }) => {
-        return  (
-          <View style={styles[`${numRows}col`]}>{children}</View>
-        )
-    }
-
     const styles = StyleSheet.create({
         handleIndicator: {
             backgroundColor: 'dimgray', // Chansge to your desired color
-            marginTop: 3
+            marginTop: 3,
         },
         handle: {
             backgroundColor: '#f7dae5', // Change to your desired color
-            height: 20, // Adjust height as needed
+            height: 25, // Adjust height as needed
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
-            borderColor:'#f7dae5'
         },
         container: {
             flex:1,
             zIndex:1,
             pointerEvents:'box-none', //alow map below to interact
             // alignContent:'center'
-            borderColor:'#f7dae5',
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
+            backgroundColor:'transparent'
         },
         bottomSheet:{
             flex:1,
             zIndex:2,
-            backgroundColor:'transparent',
             pointerEvents:'auto', //ensure bottom sheet itself is interactive
-            // backgroundColor:'#f7dae5'
+            backgroundColor:'transparent',
         },
         contentContainer: {
             flex: 1,
             zIndex:3,
             alignItems: 'center',
-            backgroundColor:'#f7dae5',
-            // backgroundColor:'white',
+            backgroundColor:'#f7dae5', //ok
+            color:'#f7dae5'
         },
         title:{
             marginTop: 13,
@@ -165,6 +151,11 @@ const NavigationBottomSheet = ({
                 animateOnMount={false}
                 handleIndicatorStyle={styles.handleIndicator}
                 handleStyle={styles.handle}
+                backgroundStyle={{
+                    backgroundColor: '#f7dae5',
+                    borderTopLeftRadius: 20, // Set consistent border radius
+                    borderTopRightRadius: 20,
+                }}
             >
                 <BottomSheetView style={styles.contentContainer}>
                     <GoogleTextInput
