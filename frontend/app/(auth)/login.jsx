@@ -40,7 +40,7 @@ const Login = () => {
       navigation.replace('index');
     } catch (error) {
       console.error('Login error:', error);
-      Alert.alert('Error', error.message || 'Failed to log in');
+      Alert.alert('Error', error.message || 'Invalid username and password');
     } finally {
       setIsLoading(false);
     }
