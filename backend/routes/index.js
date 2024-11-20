@@ -11,4 +11,4 @@ router.use("/chooseRoom", chooseRoomFormRoute);
 router.use("/complaint", complaintFormRoute);
 router.use("/navigation", navigationRoute);
 
-module.exports = router;
+module.exports = router; 

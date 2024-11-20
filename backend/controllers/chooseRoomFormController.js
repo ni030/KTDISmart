@@ -29,7 +29,7 @@ const chooseRoomFormController = {
         }
     },
 
-    updateForm: async (req, res) => {
+    updateForm: async (req, res) => { 
         const { matricNum } = req.params
         const {stBlock, stType, ndBlock, ndType, rdBlock, rdType } = req.body;
         try {

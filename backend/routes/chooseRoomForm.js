@@ -4,6 +4,6 @@ const chooseRoomFormController = require('../controllers/chooseRoomFormControlle
 
 router.get('/check/:matricNum', chooseRoomFormController.getForm)
 router.post('/create', chooseRoomFormController.createForm)
-router.put('/update/:matricNum', chooseRoomFormController.updateForm)
+router.put('/update/:matricNum', chooseRoomFormController.updateForm) 
 
-module.exports = router
+module.exports = router 

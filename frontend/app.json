@@ -32,7 +32,8 @@
           "origin": "https://ktdismart.com/"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-secure-store"
     ]
   }
 }
