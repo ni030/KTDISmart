@@ -35,7 +35,7 @@ const Login = () => {
       // Save the token securely
       await SecureStore.setItemAsync('token', response.token);
 
-      Alert.alert('Hurray!', 'Login successful!');
+      Alert.alert('Congrats!', 'Login successful!');
       // TODO: Should be navigate to home page
       navigation.replace('index');
     } catch (error) {
