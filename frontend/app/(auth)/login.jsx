@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import MyTextInput from '../../components/auth_component/LoginForm';
 import { useNavigation } from '@react-navigation/native';
 import authService from '../../services/authServices';
-import * as SecureStore from 'expo-secure-store';
+import * as SecureStore from 'expo-secure-store'; 
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -36,8 +36,8 @@ const Login = () => {
       await SecureStore.setItemAsync('token', response.token);
 
       Alert.alert('Congrats!', 'Login successful!');
-      // TODO: Should be navigate to home page
-      navigation.replace('index');
+      navigation.navigate('Home');
+  
     } catch (error) {
       console.error('Login error:', error);
       Alert.alert('Error', error.message || 'Invalid username and password');
@@ -47,7 +47,7 @@ const Login = () => {
   };
 
   const handleForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
+    navigation.navigate('forgot');
   };
 
   const handleSignUp = () => navigation.navigate('register');

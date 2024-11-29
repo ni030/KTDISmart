@@ -48,6 +48,12 @@ export default function App() {
       <View className="w-4/5 flex justify-center items-center gap-3">
   
           <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
+            <Link href="/(home)/Home">
+              <Text className="text-xl text-white font-bold text-center">home</Text>
+            </Link>
+          </TouchableOpacity>
+
+          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
             <Link href="/(auth)/login">
               <Text className="text-xl text-white font-bold text-center">Sign In</Text>
             </Link>
