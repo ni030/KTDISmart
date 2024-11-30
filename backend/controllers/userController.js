@@ -78,7 +78,7 @@ const userController = {
             const token = jwt.sign({ userId: user[0].user_id }, SECRET_KEY, { expiresIn: '1h' });
 
             console.log(`${METHOD} | Login successful | token -> ${token}`);
-            res.status(200).json({ message: 'Login successful', token });
+            res.status(200).json({ message: 'Login successful', token, userId: user[0].user_id });
         } catch (error) {
             console.error('Error during login:', error);
             res.status(500).json({ message: 'Server error', error: error.message });
@@ -117,6 +117,40 @@ const userController = {
              });
         } catch (error) {
             console.error('Error during user existence check:', error);
+            res.status(500).json({ message: 'Server error', error: error.message });
+        }
+    },
+    getUserById: async (req, res) => {
+        const METHOD = "GetUserById Controller";
+        console.log(`${METHOD} | start`);
+    
+        const { userId } = req.body; // Assuming the user ID is provided as a URL parameter
+    
+        try {
+            // Fetch user details from both user_credentials and user_profile
+            const user = await req.sql`
+                SELECT 
+                    uc.user_id,
+                    uc.username,
+                    uc.email,
+                    up.name,
+                    up.phonenum,
+                    up.matricno,
+                    up.gender,
+                    up.programmecode,
+                    up.profile_picture
+                FROM user_credentials uc
+                INNER JOIN user_profile up ON uc.user_id = up.user_id
+                WHERE uc.user_id = ${userId}`;
+    
+            if (user.length === 0) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+    
+            console.log(`${METHOD} | User found ->`, user[0]);
+            res.status(200).json({ user: user[0] }); // Return user details
+        } catch (error) {
+            console.error(`${METHOD} | Error during fetch:`, error);
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     }

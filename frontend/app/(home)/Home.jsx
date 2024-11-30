@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as SecureStore from 'expo-secure-store';
+import authService from '../../services/authServices';
 
 const HomePage = () => {
   const navigation = useNavigation();
@@ -22,7 +24,6 @@ const HomePage = () => {
       setCurrentPictureIndex((prevIndex) => (prevIndex + 1) % pictures.length);
     }, 2600);
 
-    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
 
@@ -36,12 +37,40 @@ const HomePage = () => {
     }
   };
 
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = await SecureStore.getItemAsync('userId');
+        console.log("Check userId -> " + userId)
+        if(!userId){
+          throw new Error('userId not found!')
+        }
+        const response = await authService.getUserById(userId);
+        console.log("Check user -> " + JSON.stringify(response.user))
+        setUser(response.user);
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+    
+    fetchUserData();
+  }, []);
+
   return (
     <View style={styles.container}>
       {/* Top row with logo and profile icon */}
       <View style={styles.topRow}>
-        <TouchableOpacity onPress={() => navigation.navigate('profile')}>
-          <FontAwesome name="user-circle" size={35} color="#A1335D" style={styles.profileIcon} />
+        <TouchableOpacity style={{padding:16}} onPress={() => navigation.navigate('profile')}>
+        {user && user.profile_picture ? (
+            <Image
+              source={{ uri: user.profile_picture }} // Show the profile picture if available
+              style={styles.profileIcon}
+            />
+          ) : (
+            <FontAwesome name="user-circle" size={35} color="#A1335D" style={styles.profileIcon} />
+          )}
         </TouchableOpacity>
         <Image
           source={require('./../../images/subLogo.png')}
@@ -50,7 +79,7 @@ const HomePage = () => {
         />
       </View>
 
-      {/* Picture below the logo (swapping image) */}
+      {/* (swapping image) */}
       <Image
         source={pictures[currentPictureIndex]} // Use current index for picture
         style={styles.picture}
@@ -112,12 +141,15 @@ const styles = StyleSheet.create({
     marginTop: 21,
   },
   profileIcon: {
-    marginRight: 15,
+    height:50,
+    width:50,
+    borderRadius: 25,
   },
   logo: {
-    width: '90%',
+    justifyContent: 'flex-start',
+    marginLeft:-23,
+    width: '70%',
     height: 150,
-    marginLeft: -28,
   },
   picture: {
     width: '100%',
@@ -159,7 +191,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   arrowIcon: {
-    marginLeft: 20, // Space between text and arrow icon
+    marginLeft: 20, 
     marginRight:2,
     marginTop:8,
     opacity: 0.7,

@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect } from 'react';
-import { Link } from 'expo-router';
-import { Redirect } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Pressable, Text, TouchableOpacity, View } from 'react-native';
-import { useFonts } from 'expo-font';
-import AppLoading from 'expo-app-loading';
+import React, { useEffect } from 'react';
+import { View, Image, StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
-import { PaperProvider } from 'react-native-paper';
+import * as SecureStore from 'expo-secure-store';
+import { useFonts } from 'expo-font';
+import { useNavigation } from '@react-navigation/native';
 
 export default function App() {
+  // Load custom fonts
   const [fontsLoaded] = useFonts({
     'RootLight': require('../fonts/FredokaLight.ttf'),
     'RootRegular': require('../fonts/FredokaRegular.ttf'),
@@ -17,66 +15,61 @@ export default function App() {
     'RootBold': require('../fonts/FredokaBold.ttf'),
   });
 
+  const navigation = useNavigation();
+
   useEffect(() => {
-    // Prevent the splash screen from hiding until fonts are loaded
-    SplashScreen.preventAutoHideAsync();
-  }, []);
+    // Initialize app and manage splash screen
+    const initializeApp = async () => {
+      // Prevent the splash screen from hiding automatically
+      SplashScreen.preventAutoHideAsync();
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      // Hide the splash screen when fonts are loaded
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
+      // Simulate an async task (e.g., token fetching or resource loading)
+      const token = await SecureStore.getItemAsync('token');
+      const userId = await SecureStore.getItemAsync('userId');
+
+      console.log("Check userId -> " + userId)
+
+      // Wait for fonts to load
+      if (fontsLoaded) {
+        // Hide the splash screen and navigate to the appropriate screen
+        await SplashScreen.hideAsync();
+        navigation.replace(token ? '(home)' : '(auth)');
+      }
+    };
+
+    initializeApp();
+  }, [fontsLoaded, navigation]);
+
+  // Return null to prevent rendering until fonts are loaded
   if (!fontsLoaded) {
-    return null; // Return null so nothing renders until fonts are ready
+    return null;
   }
 
-  // return(
-  //   <PaperProvider>
-  //    <Text> <Redirect href="/(ktdi-merit)" />;</Text>
-  //   </PaperProvider>
-  // )
-
-  // temporary before navbar is done
   return (
-    <SafeAreaView className="w-full h-screen flex flex-1 justify-start items-center bg-blue-100">
-      <View className="w-full h-1/3 flex justify-center items-center">
-        <Text className="text-center text-3xl text-red-900 font-semibold">Welcome to KTDI SMART</Text>
-      </View>
-      <View className="w-4/5 flex justify-center items-center gap-3">
-  
-          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
-            <Link href="/(home)/Home">
-              <Text className="text-xl text-white font-bold text-center">home</Text>
-            </Link>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
-            <Link href="/(auth)/login">
-              <Text className="text-xl text-white font-bold text-center">Sign In</Text>
-            </Link>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
-            <Link href="/(complaint)">
-              <Text className="text-xl text-white font-bold text-center">Complaint</Text>
-            </Link>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
-            <Link href="/(navigation)">
-              <Text className="text-xl text-white font-bold text-center">Navigation</Text>
-            </Link>
-          </TouchableOpacity>
-       
-          <TouchableOpacity className="bg-red-500 py-4 px-6 rounded-lg mb-4">
-            <Link href="/(ktdi-merit)">
-              <Text className="text-xl text-white font-bold text-center">KTDI Merit</Text>
-            </Link>
-          </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <Image
+        source={require('../images/splash.png')}
+        style={styles.logo}
+        resizeMode="cover"
+      />
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+  },
+  logo: {
+    position: 'absolute',
+    top: 0,
+    left: 1,
+    width: '100%', 
+    height: '100%', 
+  },
+});

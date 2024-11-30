@@ -12,4 +12,6 @@ router.post('/login', userController.login);
 // checkIsUserExist route
 router.post('/checkIsUserExist', userController.checkIsUserExist);
 
+router.post('/getUserById', userController.getUserById);
+
 module.exports = router;
