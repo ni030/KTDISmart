@@ -11,8 +11,8 @@ KTDISmart is a mobile app that helps KTDI residents by making hostel services ea
 | **3**  |  **Page**:  <br> **Component**: <br> **Service**:  <br> |  **Controller**: <br> **Routes**: <br> |
 | **4**  | **Page**:  <br> **Component**: <br> **Service**:  <br> |  **Controller**: <br> **Routes**: <br> |
 
-## Complaint Subsystem :
-👧 **Developer: SOH FEI ZHEN**📝
+## Complaint Subsystem📝
+👧 **Developer: SOH FEI ZHEN**
 
 | Sprint | Frontend | Backend |
 |--------|----------|---------|
