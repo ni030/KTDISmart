@@ -1,26 +1,27 @@
 import axios from 'axios';
 import { DEVICE_IP } from '@env'
 
-export const checkExistingForm = async (matricNum) => {
+export const checkExistingForm = async (user_id) => {
+    // console.log("ip: ", DEVICE_IP)
     try {
-        const response = await axios.get(`${DEVICE_IP}:3000/db/chooseRoom/check/${matricNum}`);
+        const response = await axios.get(`${DEVICE_IP}:3000/db/chooseRoom/check/${user_id}`);
         if (response.status == 204) {
             return "empty"
         }else{
             return response.data
-        } 
+        }
     } catch (error) {
         console.error("Error checking existing form:", error.message);
     }
 };
 
-export const createForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdBlock, rdType) => {
+export const createForm = async (user_id, stBlock, stType, ndBlock, ndType, rdBlock, rdType) => {
     try{
         const response = await axios.post(`${DEVICE_IP}:3000/db/chooseRoom/create`, {
-            matricNo,
+            user_id,
             stBlock,
-            stType, 
-            ndBlock, 
+            stType,
+            ndBlock,
             ndType,
             rdBlock,
             rdType
@@ -30,13 +31,13 @@ export const createForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdB
             return "Success"
         }
     }catch(error){
-        console.error("Error create form:", error,message)
+        console.error("Error create form:", error.message)
     }
 }
 
-export const updateForm = async (matricNo, stBlock, stType, ndBlock, ndType, rdBlock, rdType) => {
+export const updateForm = async (user_id, stBlock, stType, ndBlock, ndType, rdBlock, rdType) => {
     try{
-        const response = await axios.put(`${DEVICE_IP}:3000/db/chooseRoom/update/${matricNo}`, {
+        const response = await axios.put(`${DEVICE_IP}:3000/db/chooseRoom/update/${user_id}`, {
             stBlock,
             stType,
             ndBlock,

@@ -27,7 +27,9 @@ export const authService = {
     }
   },
   // Check if user exists
+  
   checkIsUserExist: async (userData) => {
+    console.log('Device IP -> ' + DEVICE_IP);
     console.log(`CheckIsUserExist Service | userData -> ${JSON.stringify(userData)}`);
     try {
       const response = await axios.post(`${DEVICE_IP}:3000/db/user/checkIsUserExist`, userData);
