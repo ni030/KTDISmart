@@ -49,7 +49,7 @@ const Login = () => {
   };
 
   const handleForgotPassword = () => {
-    navigation.navigate('forgot');
+    navigation.navigate('forgotPassword');
   };
 
   const handleSignUp = () => navigation.navigate('register');
