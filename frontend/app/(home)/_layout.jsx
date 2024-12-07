@@ -6,7 +6,7 @@ export default function Layout() {
   return (
     <>
     <Stack>
-    <Stack.Screen name="Home" options={{ headerShown:false}} />
+    <Stack.Screen name="Home" options={{ headerShown: false}} />
       <Stack.Screen name="profile" options={{ headerShown: "Resident Profile" }} />
     </Stack>
       {/* Render the custom bottom navigation bar */}
