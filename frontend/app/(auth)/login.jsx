@@ -35,6 +35,7 @@ const Login = () => {
       // Save the token securely
       await SecureStore.setItemAsync('token', response.token);
       await SecureStore.setItemAsync('userId', response.userId);
+      await SecureStore.setItemAsync('username', username); // Save username securely
 
       Alert.alert('Congrats!', 'Login successful!');
       navigation.navigate('(home)');
