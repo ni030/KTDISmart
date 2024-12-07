@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { View, Text, TouchableOpacity, ToastAndroid } from 'react-native';
+import React, { useCallback, useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import DateModal from '../../components/ktdi-merit/DateModal';
 import { Dropdown } from 'react-native-paper-dropdown';
@@ -8,6 +8,7 @@ import { createEvent, checkDuplicateEventName } from '../../services/manageEvent
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import GenerateQR from '../../components/ktdi-merit/GenerateQR';
 import EventRecord from '../../components/ktdi-merit/EventRecord';
+import * as SecureStore from 'expo-secure-store';
 
 const CATEGORY_OPTIONS = [
   { label: "Career", value: "Career" },
@@ -22,15 +23,10 @@ const CATEGORY_OPTIONS = [
   { label: "Leadership", value: "Leadership" }
 ];
 
-const ROLE_OPTIONS = [
-  { label: "Participant", value: "Participant" },
-  { label: "Committee", value: "Committee" },
-]
-
 const RegisterEvent = () => {
+  const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  //Temporary user id_
-  const user_id = "1a473cd0-9c4d-4a80-bcd6-cfcd2448a430";
   const [eventName, setEventName] = useState("");
   const [category, setCategory] = useState("");
 
@@ -45,7 +41,25 @@ const RegisterEvent = () => {
   const [visible, setVisible] = useState(false);
 
   const [recordVisible, setRecordVisible] = useState(false);
+  const [dateError, setDateError] = useState(false);
 
+  useEffect(() => {
+    const loadUserId = async () => {
+      try {
+        const storedUserId = await SecureStore.getItemAsync('userId');
+        if (storedUserId) {
+          setUserId(storedUserId);
+        } else {
+          console.log('No userId found');
+        }
+      } catch (error) {
+        console.error('Error retrieving userId:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUserId();
+  }, []);
 
   const onDismissStart = useCallback(() => {
     setOpenStart(false);
@@ -55,8 +69,9 @@ const RegisterEvent = () => {
     (params) => {
       setOpenStart(false);
       setDateStart(params.date);
+      checkDate(params.date, dateEnd);
     },
-    [setOpenStart, setDateStart]
+    [setOpenStart, setDateStart, dateEnd]
   );
 
   const onDismissEnd = useCallback(() => {
@@ -67,53 +82,69 @@ const RegisterEvent = () => {
     (params) => {
       setOpenEnd(false);
       setDateEnd(params.date);
+      checkDate(dateStart, params.date);
     },
-    [setOpenEnd, setDateEnd]
+    [setOpenEnd, setDateEnd, dateStart]
   );
 
-  checkDate = () => {
-    if (dateEnd < dateStart) {
-      return false;
+  const checkDate = (start, end) => {
+    if (start && end) {
+      if (start > end) {
+        setDateError(true);
+        return false;
+      } else {
+        setDateError(false);
+        return true;
+      }
     }
+    setDateError(false);
     return true;
-  }
+  };
+
   const clearFields = () => {
     setEventName("");
     setCategory("");
     setRole("");
     setDateStart("");
     setDateEnd("");
-  }
+  };
 
   const handleCreateEvent = async () => {
-
     if (!eventName || !category || !role || !dateStart || !dateEnd) {
       ToastAndroid.show("All fields are required!", ToastAndroid.SHORT);
       return;
     }
 
     const checkDup = await checkDuplicateEventName(eventName);
-    if(checkDup){
+    if (checkDup) {
       ToastAndroid.show("Event name already exists!", ToastAndroid.SHORT);
       return;
     }
 
-    if(!checkDate()){
-      ToastAndroid.show("End date must be after start date!", ToastAndroid.SHORT);
+    if (!checkDate(dateStart, dateEnd)) {
+      ToastAndroid.show("End date must be later than start date!", ToastAndroid.SHORT);
       return;
     }
 
-    try{
-      const res = await createEvent(eventName, category, role, dateStart, dateEnd, user_id);
-      if(res){
+    try {
+      const res = await createEvent(eventName, category, role, dateStart, dateEnd, userId);
+      if (res) {
         setQrcodeID(res.eventId);
         ToastAndroid.show("Event created successfully", ToastAndroid.SHORT);
         setVisible(true);
         clearFields();
       }
-    }catch(error){
+    } catch (error) {
       console.error("Error create event:", error.message);
     }
+  };
+
+  if (loading) {
+    return (
+      <View className="flex justify-center items-center h-full">
+        <ActivityIndicator size="large" color="#902D53" />
+      </View>
+    );
   }
 
   return (
@@ -123,7 +154,7 @@ const RegisterEvent = () => {
           <View className="w-full h-auto flex flex-row justify-end items-center absolute top-6 z-auto">
             <IconButton
               icon={() => <FontAwesome6 name="bars-staggered" size={26} color="#902D53" />}
-              onPress={() => {setRecordVisible(true)}}
+              onPress={() => { setRecordVisible(true) }}
               className="m-5 shadow-lg"
             />
           </View>
@@ -133,7 +164,7 @@ const RegisterEvent = () => {
             <TextInput
               label="Event Name"
               mode='outlined'
-              activeOutlineColor='#A1335D'          
+              activeOutlineColor='#A1335D'
               value={eventName}
               onChangeText={setEventName}
             />
@@ -149,7 +180,7 @@ const RegisterEvent = () => {
                 menuContentStyle={{ backgroundColor: 'white' }}
               ></Dropdown>
             </View>
-            
+
             <SegmentedButtons
               value={role}
               onValueChange={setRole}
@@ -166,14 +197,13 @@ const RegisterEvent = () => {
             />
 
             <TouchableOpacity onPress={() => setOpenStart(true)}>
-
               <TextInput
                 mode='outlined'
                 placeholder='Start Date'
                 value={dateStart ? dateStart.toLocaleDateString('en-GB') : ""}
                 editable={false}
-                right={<TextInput.Icon icon="calendar-month"/>}
-
+                right={<TextInput.Icon icon="calendar-month" />}
+                outlineColor={dateError ? '#dc2626' : undefined}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setOpenEnd(true)}>
@@ -182,19 +212,26 @@ const RegisterEvent = () => {
                 placeholder='End Date'
                 value={dateEnd ? dateEnd.toLocaleDateString('en-GB') : ""}
                 editable={false}
-                right={<TextInput.Icon icon="calendar-month"/>}
+                right={<TextInput.Icon icon="calendar-month" />}
+                outlineColor={dateError ? '#dc2626' : undefined}
               />
             </TouchableOpacity>
-            
-            <DateModal open={openStart} onDismiss={onDismissStart} onConfirm={onConfirmStart} date={dateStart}/>
-            <DateModal open={openEnd} onDismiss={onDismissEnd} onConfirm={onConfirmEnd} date={dateEnd}/>
+
+            {dateError && (
+              <Text className="text-center -top-3 text-sm text-red-600">
+                End date must be later than start date!
+              </Text>
+            )}
+
+            <DateModal open={openStart} onDismiss={onDismissStart} onConfirm={onConfirmStart} date={dateStart} />
+            <DateModal open={openEnd} onDismiss={onDismissEnd} onConfirm={onConfirmEnd} date={dateEnd} />
 
             <Button mode="contained" className="bg-primary-300 p-1" onPress={handleCreateEvent}>
               Register
             </Button>
 
-            <GenerateQR visible={visible} setVisible={setVisible} qrcodeID={qrcodeID}/>
-            <EventRecord user_id={user_id}  recordVisible={recordVisible} setRecordVisible={setRecordVisible} />
+            <GenerateQR visible={visible} setVisible={setVisible} qrcodeID={qrcodeID} />
+            <EventRecord userId={userId} recordVisible={recordVisible} setRecordVisible={setRecordVisible} />
 
           </View>
         </View>

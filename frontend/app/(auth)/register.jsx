@@ -53,8 +53,8 @@ const Register = () => {
   const [page, setPage] = useState(1);
 
   const OPTIONS = [
-    { label: 'Male', value: 'male' },
-    { label: 'Female', value: 'female' },
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' },
   ];
 
   // Go to the next page after validation

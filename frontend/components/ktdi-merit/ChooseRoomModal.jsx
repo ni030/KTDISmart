@@ -9,11 +9,9 @@ import { checkExistingForm, createForm, updateForm } from '../../services/manage
 const ChooseRoomModal = ({
   visible,
   setVisible,
-  user_id
+  userId,
+  gender
   }) => {
-    // Temporary data
-    const gender = "Female";
-
     // Constants
     const MALE_BLOCK_OPTIONS = [
       { label: 'M05', value: 'M05' },
@@ -86,7 +84,7 @@ const ChooseRoomModal = ({
 
     const checkExisting = async () => {
       try{
-        const res = await checkExistingForm(user_id);
+        const res = await checkExistingForm(userId);
         if(res === "empty"){
           setExistingForm(false);
         }else{
@@ -104,14 +102,14 @@ const ChooseRoomModal = ({
     }
 
     useEffect(() => {
-      if(!user_id) return;
+      if(!userId) return;
       checkExisting();
-    }, [user_id]);
+    }, [userId]);
 
     const createChooseRoomForm = async () => {
       console.log("create form")
       try{
-        const res = await createForm(user_id, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
+        const res = await createForm(userId, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
         setExistingForm(true);
         if(res === "Success"){
           ToastAndroid.show('Room Selection Updated Successfully!', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -124,7 +122,7 @@ const ChooseRoomModal = ({
 
     const updateChooseRoomForm = async () => {
       try{
-        const res = await updateForm(user_id, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
+        const res = await updateForm(userId, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
 
         if(res === "Success"){
           ToastAndroid.show('Room Selection Updated Successfully!', ToastAndroid.LONG, ToastAndroid.CENTER);

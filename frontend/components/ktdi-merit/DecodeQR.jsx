@@ -6,9 +6,7 @@ import { recordMerit } from '../../services/manageMerit';
 import { Camera } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 
-const DecodeQR = ({user_id}) => {
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [decodedData, setDecodedData] = useState('');
+const DecodeQR = ({userId}) => {
   const navigation = useNavigation();
 
   const pickImage = async () => {
@@ -29,15 +27,12 @@ const DecodeQR = ({user_id}) => {
 
       if (!result.canceled) {
         const { uri } = result.assets[0];
-        setSelectedImage(uri);
-
         // Scan the selected image for QR code
         let scannedResult = await Camera.scanFromURLAsync(uri);
         if (scannedResult.length > 0) {
           const scannedData = scannedResult[0].data;
           const [eventData] = JSON.parse(scannedData);
-          setDecodedData(eventData);
-          let result = await recordMerit(user_id, eventData);
+          let result = await recordMerit(userId, eventData);
           if(result == "success"){
             ToastAndroid.show(`Merit successfully recorded!`, ToastAndroid.LONG);
             navigation.navigate('index');

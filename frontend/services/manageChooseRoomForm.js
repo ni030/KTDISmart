@@ -2,7 +2,7 @@ import axios from 'axios';
 import { DEVICE_IP } from '@env'
 
 export const checkExistingForm = async (user_id) => {
-    // console.log("ip: ", DEVICE_IP)
+    console.log("ip: ", DEVICE_IP)
     try {
         const response = await axios.get(`${DEVICE_IP}:3000/db/chooseRoom/check/${user_id}`);
         if (response.status == 204) {
