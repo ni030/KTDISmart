@@ -40,6 +40,7 @@ export default function App() {
     };
 
     initializeApp();
+    // navigation.replace('(home)');
   }, [fontsLoaded, navigation]);
 
   // Return null to prevent rendering until fonts are loaded

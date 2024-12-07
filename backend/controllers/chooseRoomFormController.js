@@ -1,13 +1,11 @@
 const chooseRoomFormController = {
     getForm: async (req, res) => {
-        const { matricNum } = req.params;
+        const { user_id } = req.params;
         try {
-            const response = await req.sql`SELECT * FROM chooseroomform WHERE matricnumber = ${matricNum}`;
+            const response = await req.sql`SELECT * FROM chooseroomform WHERE user_id = ${user_id}`;
             if (response.length === 0) {
-                console.log("empty in server")
                 res.status(204).json({ message: "No form found" });
             } else {
-                console.log("found in server")
                 res.json(response);
             }
         } catch (error) {
@@ -17,11 +15,10 @@ const chooseRoomFormController = {
     },
 
     createForm: async (req, res) => {
-        console.log("create form backend")
-        const { matricNo, stBlock, stType, ndBlock, ndType, rdBlock, rdType } = req.body;
+        const { user_id, stBlock, stType, ndBlock, ndType, rdBlock, rdType } = req.body;
         try {
            const response = await req.sql`
-           INSERT INTO chooseroomform (matricnumber, roomblock1, roomtype1, roomblock2, roomtype2, roomblock3, roomtype3) VALUES (${matricNo}, ${stBlock}, ${stType}, ${ndBlock}, ${ndType}, ${rdBlock}, ${rdType}) `;
+           INSERT INTO chooseroomform (user_id, roomblock1, roomtype1, roomblock2, roomtype2, roomblock3, roomtype3) VALUES (${user_id}, ${stBlock}, ${stType}, ${ndBlock}, ${ndType}, ${rdBlock}, ${rdType}) `;
            res.status(201).json({ message: "Create successful" })
         } catch(error) {
             console.error("Error during create form:", error);
@@ -29,14 +26,14 @@ const chooseRoomFormController = {
         }
     },
 
-    updateForm: async (req, res) => { 
-        const { matricNum } = req.params
+    updateForm: async (req, res) => {
+        const { user_id } = req.params
         const {stBlock, stType, ndBlock, ndType, rdBlock, rdType } = req.body;
         try {
             const response = await req.sql`
             UPDATE chooseroomform 
             SET roomblock1 = ${stBlock}, roomtype1 = ${stType}, roomblock2 = ${ndBlock}, roomtype2 = ${ndType}, roomblock3 = ${rdBlock}, roomtype3 = ${rdType} 
-            WHERE matricnumber = ${matricNum}`;
+            WHERE user_id = ${user_id}`;
             res.status(200).json({ message: "Update successful" });
         } catch(error) {
             console.error("Error during update form:", error);

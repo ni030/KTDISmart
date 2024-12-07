@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'; 
-import { ToastAndroid, View } from 'react-native';
+import { ScrollView, ToastAndroid, View } from 'react-native';
 import { Button, Dialog, Portal, Text, IconButton } from 'react-native-paper';
 import { Dropdown } from 'react-native-paper-dropdown';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -9,11 +9,9 @@ import { checkExistingForm, createForm, updateForm } from '../../services/manage
 const ChooseRoomModal = ({
   visible,
   setVisible,
+  userId,
+  gender
   }) => {
-    // Temporary data
-    const matricNum = 'A22EC0070';
-    const gender = "Female";
-
     // Constants
     const MALE_BLOCK_OPTIONS = [
       { label: 'M05', value: 'M05' },
@@ -59,8 +57,23 @@ const ChooseRoomModal = ({
     const [rdRoomType, setRdRoomType] = useState('');
     const [existingForm, setExistingForm] = useState(false);
     const [dialogVisible, setDialogVisible] = useState(false);
+    const [save, setSave] = useState(false);
 
     const hideDialog = () => {
+      if(!save){
+        if(!existingForm){
+          setStRoomBlock('');
+          setStRoomType('');
+          setNdRoomBlock('');
+          setNdRoomType('');
+          setRdRoomBlock('');
+          setRdRoomType('');
+        }else{
+          checkExisting();
+        }
+        ToastAndroid.show('Record Unsaved!', ToastAndroid.LONG, ToastAndroid.CENTER);
+      }
+      setSave(false);
       setVisible(false);
     }
 
@@ -71,7 +84,7 @@ const ChooseRoomModal = ({
 
     const checkExisting = async () => {
       try{
-        const res = await checkExistingForm(matricNum);
+        const res = await checkExistingForm(userId);
         if(res === "empty"){
           setExistingForm(false);
         }else{
@@ -89,13 +102,14 @@ const ChooseRoomModal = ({
     }
 
     useEffect(() => {
+      if(!userId) return;
       checkExisting();
-    }, [matricNum]);
+    }, [userId]);
 
     const createChooseRoomForm = async () => {
       console.log("create form")
       try{
-        const res = await createForm(matricNum, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
+        const res = await createForm(userId, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
         setExistingForm(true);
         if(res === "Success"){
           ToastAndroid.show('Room Selection Updated Successfully!', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -108,7 +122,7 @@ const ChooseRoomModal = ({
 
     const updateChooseRoomForm = async () => {
       try{
-        const res = await updateForm(matricNum, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
+        const res = await updateForm(userId, stRoomBlock, stRoomType, ndRoomBlock, ndRoomType, rdRoomBlock, rdRoomType);
 
         if(res === "Success"){
           ToastAndroid.show('Room Selection Updated Successfully!', ToastAndroid.LONG, ToastAndroid.CENTER);
@@ -119,6 +133,7 @@ const ChooseRoomModal = ({
     }
 
     const saveChooseRoomForm = () => {
+      setSave(true);
       setVisible(false);
       if(existingForm){
         updateChooseRoomForm();
@@ -130,9 +145,9 @@ const ChooseRoomModal = ({
   return (
       <View>
         <Portal>
-          <Dialog visible={visible} onDismiss={hideDialog} className="-top-7" >
+          <Dialog visible={visible} onDismiss={hideDialog} className="p-3">
             <Dialog.Title>
-              <View className="flex flex-row justify-center items-center">
+              <View className="flex flex-row justify-start items-center">
                 <Text className="text-2xl p-1">Choose Room</Text>
                 <IconButton
                   icon={() => <FontAwesome6 name="circle-question" size={20} color="black" />}
@@ -142,82 +157,83 @@ const ChooseRoomModal = ({
               </View>
             </Dialog.Title>
             <Dialog.Content className="flex justify-start gap-1">
-              {/* <Text className="font-r text-primary-600">Current Batch: Batch 1</Text> */}
-              <View>
-                <Text className="text-base font-semibold p-1">Option 1</Text>
-                <Dropdown
-                  label="Room Block"
-                  mode='outlined'
-                  placeholder="Select Block"
-                  hideMenuHeader={true}
-                  className="w-11/12"
-                  options={gender === "Male" ? MALE_BLOCK_OPTIONS : FEMALE_BLOCK_OPTIONS}
-                  value={stRoomBlock}
-                  onSelect={setStRoomBlock}
-                  statusBarHeight={2}
-                />
-                <Dropdown
-                  label="Room Type"
-                  mode='outlined'
-                  placeholder="Select Room Type"
-                  hideMenuHeader={true}
-                  className="w-11/12"
-                  options={gender === "Male" ? MALE_ROOM_TYPE_OPTIONS : FEMALE_ROOM_TYPE_OPTIONS}
-                  value={stRoomType}
-                  onSelect={setStRoomType}
-                  statusBarHeight={2}
-                />
-              </View>
-              <View>
-                <Text className="text-base font-semibold p-1">Option 2</Text>
-                <Dropdown
-                  label="Room Block"
-                  mode='outlined'
-                  placeholder="Select Block"
-                  hideMenuHeader={true}
-                  className="w-11/12"
-                  options={gender === "Male" ? MALE_BLOCK_OPTIONS : FEMALE_BLOCK_OPTIONS}
-                  value={ndRoomBlock}
-                  onSelect={setNdRoomBlock}
-                  statusBarHeight={2}
-                />
-                <Dropdown
-                  label="Room Type"
-                  mode='outlined'
-                  placeholder="Select Room Type"
-                  hideMenuHeader={true}
-                  className="w-11/12"
-                  options={gender === "Male" ? MALE_ROOM_TYPE_OPTIONS : FEMALE_ROOM_TYPE_OPTIONS}
-                  value={ndRoomType}
-                  onSelect={setNdRoomType}
-                  statusBarHeight={2}
-                />
-              </View>
-              <View>
-                <Text className="text-base font-semibold p-1">Option 3</Text>
-                <Dropdown
-                  label="Room Block"
-                  mode='outlined'
-                  placeholder="Select Block"
-                  hideMenuHeader={true}
-                  className="w-11/12"
-                  options={gender === "Male" ? MALE_BLOCK_OPTIONS : FEMALE_BLOCK_OPTIONS}
-                  value={rdRoomBlock}
-                  onSelect={setRdRoomBlock}
-                  statusBarHeight={2}
-                />
-                <Dropdown
-                  label="Room Type"
-                  mode='outlined'
-                  placeholder="Select Room Type"
-                  hideMenuHeader={true}
-                  className="w-11/12"
-                  options={gender === "Male" ? MALE_ROOM_TYPE_OPTIONS : FEMALE_ROOM_TYPE_OPTIONS}
-                  value={rdRoomType}
-                  onSelect={setRdRoomType}
-                  statusBarHeight={2}
-                />
-              </View>
+              <ScrollView>
+                <View>
+                  <Text className="text-base font-semibold p-1">Option 1</Text>
+                  <Dropdown
+                    label="Room Block"
+                    mode='outlined'
+                    placeholder="Select Block"
+                    hideMenuHeader={true}
+                    className="w-11/12"
+                    options={gender === "Male" ? MALE_BLOCK_OPTIONS : FEMALE_BLOCK_OPTIONS}
+                    value={stRoomBlock}
+                    onSelect={setStRoomBlock}
+                    statusBarHeight={2}
+                  />
+                  <Dropdown
+                    label="Room Type"
+                    mode='outlined'
+                    placeholder="Select Room Type"
+                    hideMenuHeader={true}
+                    className="w-11/12"
+                    options={gender === "Male" ? MALE_ROOM_TYPE_OPTIONS : FEMALE_ROOM_TYPE_OPTIONS}
+                    value={stRoomType}
+                    onSelect={setStRoomType}
+                    statusBarHeight={2}
+                  />
+                </View>
+                <View>
+                  <Text className="text-base font-semibold p-1">Option 2</Text>
+                  <Dropdown
+                    label="Room Block"
+                    mode='outlined'
+                    placeholder="Select Block"
+                    hideMenuHeader={true}
+                    className="w-11/12"
+                    options={gender === "Male" ? MALE_BLOCK_OPTIONS : FEMALE_BLOCK_OPTIONS}
+                    value={ndRoomBlock}
+                    onSelect={setNdRoomBlock}
+                    statusBarHeight={2}
+                  />
+                  <Dropdown
+                    label="Room Type"
+                    mode='outlined'
+                    placeholder="Select Room Type"
+                    hideMenuHeader={true}
+                    className="w-11/12"
+                    options={gender === "Male" ? MALE_ROOM_TYPE_OPTIONS : FEMALE_ROOM_TYPE_OPTIONS}
+                    value={ndRoomType}
+                    onSelect={setNdRoomType}
+                    statusBarHeight={2}
+                  />
+                </View>
+                <View>
+                  <Text className="text-base font-semibold p-1">Option 3</Text>
+                  <Dropdown
+                    label="Room Block"
+                    mode='outlined'
+                    placeholder="Select Block"
+                    hideMenuHeader={true}
+                    className="w-11/12"
+                    options={gender === "Male" ? MALE_BLOCK_OPTIONS : FEMALE_BLOCK_OPTIONS}
+                    value={rdRoomBlock}
+                    onSelect={setRdRoomBlock}
+                    statusBarHeight={2}
+                  />
+                  <Dropdown
+                    label="Room Type"
+                    mode='outlined'
+                    placeholder="Select Room Type"
+                    hideMenuHeader={true}
+                    className="w-11/12"
+                    options={gender === "Male" ? MALE_ROOM_TYPE_OPTIONS : FEMALE_ROOM_TYPE_OPTIONS}
+                    value={rdRoomType}
+                    onSelect={setRdRoomType}
+                    statusBarHeight={2}
+                  />
+                </View>
+              </ScrollView>
             </Dialog.Content>
             <Dialog.Actions>
               <Button onPress={saveChooseRoomForm}>Save</Button>
