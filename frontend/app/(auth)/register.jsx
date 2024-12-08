@@ -76,7 +76,7 @@ const Register = () => {
       return response;
     } catch (error) {
       console.log('Error checking user existence:', error);
-      return false; // Fail gracefully
+      return false; 
     }
   };
 

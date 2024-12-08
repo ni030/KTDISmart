@@ -26,8 +26,8 @@ export const authService = {
       throw error.response || { message: 'An error occurred during login' };
     }
   },
+
   // Check if user exists
-  
   checkIsUserExist: async (userData) => {
     console.log('Device IP -> ' + DEVICE_IP);
     console.log(`CheckIsUserExist Service | userData -> ${JSON.stringify(userData)}`);
