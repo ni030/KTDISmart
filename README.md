@@ -7,8 +7,8 @@ KTDISmart is a mobile app that helps KTDI residents by making hostel services ea
 | Sprint | Module Name | Frontend | Backend |
 |--------|----------|---------|---------|
 | **1**  | Choosing Prefer Hostel Module | **Page**:  <br> - [Register page](./frontend/app/(auth)/register.jsx)  <br> - [Login page](./frontend/app/(auth)/login.jsx)  <br> **Component**:  <br> - [Login Form](./frontend/components/auth-component/LoginForm.jsx)  <br> - [Registration form](./frontend/app/(auth)/register.jsx)  <br> **Service**:  <br> - [Authorization service](./frontend/services/authServices.js) | **Controller**: <br> - [user Controller](./backend/controllers/userController.js) <br> **Routes**: <br> - [user Route](./backend/routes/userRoute.js) <br>|
-| **2**  | Tracking Module | **Page**:  <br> **Component**: <br> **Service**:  <br> |  **Controller**: <br> **Routes**: <br> |
-| **3**  | Feedback Module | **Page**:  <br> **Component**: <br> **Service**:  <br> |  **Controller**: <br> **Routes**: <br> |
+| **2**  | Account Recovery & Home page Module | **Page**:  <br> **Component**: <br> **Service**:  <br> |  **Controller**: <br> **Routes**: <br> |
+| **3**  | User profile management Module | **Page**:  <br> **Component**: <br> **Service**:  <br> |  **Controller**: <br> **Routes**: <br> |
 | **4**  | Integration Module | **Page**:  <br> **Component**: <br> **Service**:  <br> |  **Controller**: <br> **Routes**: <br> |
 
 ## Complaint Subsystem📝
