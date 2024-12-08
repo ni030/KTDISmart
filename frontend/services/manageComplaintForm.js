@@ -1,28 +1,32 @@
 import axios from 'axios';
 import { DEVICE_IP } from '@env'
 
-// export const checkExistingForm = async (matricNum) => {
-//     try {
-//         const response = await axios.get(`${DEVICE_IP}:3000/db/complaint/check/${matricNum}`);
-//         if (response.status == 204) {
-//             return "empty"
-//         }else{
-//             return response.data
-//         }
-//     } catch (error) {
-//         console.error("Error checking existing form:", error.message);
-//     }
-// };
+export const checkExistingForm = async (userId) => {
+    try {
+        const response = await axios.get(`${DEVICE_IP}:3000/db/complaint/check/${userId}`);
+        if (response.status == 204) {
+            return "empty"
+        }else{
+            return response.data
+        }
+    } catch (error) {
+        console.error("Error checking existing form:", error.message);
+    }
+};
 
-export const createForm = async(matric, cat, type, desc, pic)=> {
-    console.log("hi")
+export const createForm = async(userId, cat, type, desc, pic, randomStatus, createdTime, constructorTime, completedTime)=> {
+
     try{
         const response = await axios.post(`${DEVICE_IP}:3000/db/complaint/create`, {
-            matric,
+            userId,
             cat,
             type,
             desc,
-            pic
+            pic, 
+            randomStatus,
+            createdTime, 
+            constructorTime, 
+            completedTime
         });
         if(response.status === 201){
             console.log("create success")
