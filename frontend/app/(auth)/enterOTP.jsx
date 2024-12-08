@@ -1,41 +1,55 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import passwordService from './../../services/passwordService';
 
 const EnterOTP = () => {
+  const [otp, setOtp] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { email } = route.params || {};
 
-  const navigation = useNavigation(); 
+  const handleSubmitOTP = async () => {
+    if (otp.length !== 4) {
+      setErrorMessage('OTP must be 4 digits');
+      return;
+    }
+
+    try {
+      const response = await passwordService.verifyOTP({ email, otp });
+      if (response?.status === 'success') {
+        Alert.alert('Success', response.message);
+        navigation.navigate('resetPassword', { email });
+      } else {
+        setErrorMessage(response?.message || 'Invalid OTP');
+      }
+    } catch (error) {
+      setErrorMessage(error.message || 'An error occurred. Please try again.');
+    }
+  };
 
   return (
     <ImageBackground
-      source={require('./../../images/otpPic.png')} 
+      source={require('./../../images/otpPic.png')}
       style={styles.background}
-      resizeMode="cover" 
+      resizeMode="cover"
     >
-      <View style={styles.overlay} /> 
+      <View style={styles.overlay} />
       <View style={styles.container}>
         <Text style={styles.title}>Enter OTP</Text>
-        <Text style={styles.subtitle}>
-          A 4-digit code has been sent to your email.
-        </Text>
-        <View style={styles.otpContainer}>
-          {[...Array(4)].map((_, index) => (
-            <TextInput
-              key={index}
-              style={styles.otpInput}
-              maxLength={1}
-              keyboardType="number-pad"
-            />
-          ))}
-        </View>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate('resetPassword')}
-        >
+        <Text style={styles.subtitle}>A 4-digit code has been sent to your email.</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter OTP"
+          keyboardType="numeric"
+          maxLength={4}
+          value={otp}
+          onChangeText={setOtp}
+        />
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+        <TouchableOpacity style={styles.button} onPress={handleSubmitOTP}>
           <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => {}}>
-          <Text style={styles.resendText}>Resend OTP</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>

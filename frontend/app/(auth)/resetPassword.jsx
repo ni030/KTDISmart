@@ -1,30 +1,61 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import passwordService from './../../services/passwordService';
 
 const ResetPassword = () => {
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { email } = route.params || {};
+
+  const handleResetPassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setErrorMessage('Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await passwordService.resetPassword({ email, newPassword });
+      if (response?.status === 'success') {
+        Alert.alert('Success', response.message);
+        navigation.navigate('login');
+      } else {
+        setErrorMessage(response?.message || 'Failed to reset password');
+      }
+    } catch (error) {
+      setErrorMessage(error.message || 'An error occurred. Please try again.');
+    }
+  };
+
   return (
     <ImageBackground
-      source={require('./../../images/resetPic.png')} 
+      source={require('./../../images/resetPic.png')}
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.overlay} /> 
+      <View style={styles.overlay} />
       <View style={styles.container}>
         <Text style={styles.title}>Reset Password</Text>
         <TextInput
           style={styles.input}
           placeholder="New Password"
           secureTextEntry
-          placeholderTextColor="#888"
+          value={newPassword}
+          onChangeText={setNewPassword}
         />
         <TextInput
           style={styles.input}
           placeholder="Confirm Password"
           secureTextEntry
-          placeholderTextColor="#888"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
         />
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Submit</Text>
+        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
+        <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
+          <Text style={styles.buttonText}>Reset</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
