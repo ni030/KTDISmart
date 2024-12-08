@@ -11,13 +11,12 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DeclareDialog from '../../components/complaint/declarateDialog';
 import ImageModal from '../../components/complaint/imageModal';
 import { createForm } from '../../services/manageComplaintForm';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function Report() {
+    
     //temp data
-    const [matric, setMatric] = React.useState('A22EC0272');
-    const [name, setName] = React.useState('Feizhen');
-    const [phoneNum, setPhone] = React.useState('012-3456789');
     const [desc, setDesc] = React.useState('');
     const [dorm, setDorm] = React.useState('MA6 210');
     const [type, setType] = React.useState('');
@@ -26,16 +25,44 @@ export default function Report() {
     const [uploadVisible,setUploadVisible]=React.useState(true);
     const [modalVisible,setModalVisible]=React.useState(false);
     const [dialogVisible, setDialogVisible] = React.useState(false);
-    
+
+    const navigation = useNavigation();
+
     const route = useRoute();
-    const { cat } = route.params;
+    const { cat, userId, userInfo } = route.params;
 
     const createComplaintForm = async () => {
         console.log("create form")
+        // Define the possible statuses
+    const statuses = ["submitted", "staff reviewed", "constructor assigned", "completed", "incompleted", "rated"];
+    
+    // Randomly select a status
+    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+
+    // Get the current time
+    const currentTime = new Date();
+
+    // Calculate times based on the random status
+    let constructorTime = null;
+    let completedTime = null;
+    let createdTime = currentTime; // Default is current time
+
+    if (randomStatus === "constructor assigned") {
+        constructorTime = new Date(currentTime.getTime() + 7 * 24 * 60 * 60 * 1000); // +1 week
+    } else if (randomStatus === "completed" || randomStatus === "rated") {
+        createdTime = new Date(currentTime.getTime() - 7 * 24 * 60 * 60 * 1000); // -1 week
+        constructorTime = currentTime;
+        completedTime = currentTime;
+    } else if (randomStatus === "incompleted") {
+        createdTime = new Date(currentTime.getTime() - 7 * 24 * 60 * 60 * 1000); // -1 week
+        constructorTime = currentTime;
+    }
+
         try{
-          const res = await createForm(matric, cat, type, desc, pic);
+          const res = await createForm(userId, cat, type, desc, pic, randomStatus, createdTime, constructorTime, completedTime);
           if(res === "Success"){
             ToastAndroid.show('Complaint Submitted Successfully!', ToastAndroid.LONG, ToastAndroid.CENTER);
+            navigation.navigate('index');
           }
   
         }catch(error){
@@ -90,6 +117,7 @@ export default function Report() {
 
     if (!pickerResult.canceled) {
       setPic(pickerResult.assets[0].uri);
+      console.log(pickerResult.assets[0].uri);
       setUploadVisible(false);
     }
   };
@@ -111,13 +139,14 @@ export default function Report() {
 
     if (!pickerResult.canceled) {
       setPic(pickerResult.assets[0].uri);
+      console.log(pickerResult.assets[0].uri);
       setUploadVisible(false);
     }
   };
 
   // Check if the form is valid (all required fields filled)
   const isFormValid = () => {
-    return name && phoneNum && dorm && type && desc;
+    return type && desc && pic;
   };
 
     return (
@@ -132,16 +161,14 @@ export default function Report() {
                     <TextInput
                         disabled= "true"
                         mode="outlined"
-                        value={name}
-                        onChangeText={setName}
+                        value={userInfo.name}
                     />
                     
                     <Text className="text-xl text-white m-1">Phone Number:</Text>
                     <TextInput
                         mode="outlined"
                         disabled= "true"
-                        value={phoneNum}
-                        onChangeText={setPhone}
+                        value={userInfo.phonenum}
                     />
                
                     <Text className="text-xl text-white m-1">Dorm:</Text>
@@ -214,7 +241,7 @@ export default function Report() {
                 <DeclareDialog
                             visible={dialogVisible}
                             setVisible={setDialogVisible}
-                            func={() => createComplaintForm(matric, cat, type, desc, pic)}
+                            func={() => createComplaintForm(userId, cat, type, desc, pic)}
                         />
             </SafeAreaView>
             </ScrollView>

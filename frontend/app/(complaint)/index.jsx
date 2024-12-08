@@ -1,36 +1,76 @@
-import MyCard from '../../components/complaint/card';
-import { SafeAreaView, Text, View, TouchableOpacity} from 'react-native';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import NoComplaint from '../../components/complaint/noComplaint';
+import HaveComplaint from '../../components/complaint/haveComplaint';
+import { SafeAreaView } from 'react-native';
+import ProtectedRoute from '../../components/root/ProtectedRoute';
+import { checkExistingForm } from '../../services/manageComplaintForm';
+import Loader from '../../components/root/Loader';
+import * as SecureStore from 'expo-secure-store';
+import { useFocusEffect } from '@react-navigation/native';
 
-export default function Index(){
-  const navigation = useNavigation();
-    return (
-          <SafeAreaView className="w-screen h-screen bg-primary-500">
-            <View className="w-full h-auto p-5 flex mt-5">
-                <Text className="text-4xl text-white">How can we assist you today?</Text>
-            </View>
-            <View className="flex flex-row">
-              <View className="basis-1/2">
-                <MyCard  icon={() => <FontAwesome6 name="plug" size={56} color="black" />} title="Electrical"/>
-              </View>
-              <View className="basis-1/2"> 
-                <MyCard icon={() => <FontAwesome6 name="bug" size={56} color="black" />} title="Pest Control"/></View>
-            </View>
-            <View className="flex flex-row">
-              <View className="basis-1/2">
-                <MyCard icon={() => <FontAwesome6 name="water" size={56} color="black" />} title="Piping"/>
-              </View>
-              <View className="basis-1/2"> 
-                <MyCard icon={() => <FontAwesome6 name="toilet" size={56} color="black" />} title="Sanitary"/>
-              </View>
-            </View>
-            <View className="flex items-center mt-5">
-              <TouchableOpacity onPress={() => navigation.navigate('report', {cat:'Other'})}>
-                <Text className="text-lg text-white underline">Report other issues?</Text>
-              </TouchableOpacity>
-            </View>
-          </SafeAreaView>
-        
-      );
-}
+const History = () => {
+  const [isExist, setExist] = useState(false); // Tracks if complaints exist
+  const [loading, setLoading] = useState(true);
+  const [complaintsData, setComplaintsData] = useState([]);
+  const [userId, setUserId] = useState(null);
+
+  // Fetch complaints based on userId
+  const checkExisting = async (userId) => {
+    try {
+      setLoading(true); // Show loader during data fetch
+      const res = await checkExistingForm(userId);
+      if (res === 'empty' || !res || res.length === 0) {
+        setExist(false); // No complaints found
+      } else {
+        setExist(true);
+        setComplaintsData(res); // Set complaints data if available
+      }
+    } catch (error) {
+      console.error('Error in checkExisting:', error);
+    } finally {
+      setLoading(false); // Hide loader once fetch is complete
+    }
+  };
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const storedUserId = await SecureStore.getItemAsync('userId');
+        if (storedUserId) {
+          setUserId(storedUserId);
+          await checkExisting(storedUserId);
+        } else {
+          console.log('No userId found');
+        }
+      } catch (error) {
+        console.error('Error retrieving userId:', error);
+      }
+    };
+    loadData();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      if (userId) {
+        checkExisting(userId); // Re-fetch data when screen regains focus
+      }
+    }, [userId])
+  );
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  // Render the appropriate component based on whether complaints exist
+  return (
+    <SafeAreaView className="w-screen h-screen bg-primary-500">
+      {isExist ? <HaveComplaint complaints={complaintsData} /> : <NoComplaint />}
+    </SafeAreaView>
+  );
+};
+
+export default () => (
+  <ProtectedRoute>
+    <History />
+  </ProtectedRoute>
+);
