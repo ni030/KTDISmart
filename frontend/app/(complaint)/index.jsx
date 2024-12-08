@@ -63,7 +63,7 @@ const History = () => {
 
   // Render the appropriate component based on whether complaints exist
   return (
-    <SafeAreaView className="w-screen h-screen bg-primary-500">
+    <SafeAreaView className="w-screen flex-1 bg-primary-500">
       {isExist ? <HaveComplaint complaints={complaintsData} /> : <NoComplaint />}
     </SafeAreaView>
   );
