@@ -7,8 +7,10 @@ const complaintFormRoute = require("./complaintForm");
 const navigationRoute = require("./navigationRoute")
 const eventRoute = require("./eventRoute")
 const ktdiMeritRoute = require("./ktdiMeritRoute");
+const passwordRoute = require("./passwordRoute");
 const amenityRoute = require("./amenityRoute");
 
+router.use("/password", passwordRoute);
 router.use("/user", userRoute);
 router.use("/chooseRoom", chooseRoomFormRoute);
 router.use("/complaint", complaintFormRoute);

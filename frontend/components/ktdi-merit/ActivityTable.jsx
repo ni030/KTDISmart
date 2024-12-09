@@ -1,40 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { calcBatch, getPersonalMeritDetail } from '../../services/manageMerit';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native-paper';
 
-const ActivityTable = ({ user_id }) => {
+const ActivityTable = ({ userId }) => {
   const [activityList, setActivityList] = useState([]);
   const [score, setScore] = useState(0);
   const [batchNum, setBatchNum] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
+        setLoading(true);
         try {
-          const res = await getPersonalMeritDetail(user_id);
+          const res = await getPersonalMeritDetail(userId);
           if (res && res.length > 0) {
             const score = await updateScore();
             setScore(score);
             setActivityList(res[0].events);
-            const batch = await calcBatch(user_id);
+            const batch = await calcBatch(userId);
             setBatchNum(batch);
           } else {
-            console.log('No merit details found for user:', user_id);
+            console.log('No merit details found for user:', userId);
           }
         } catch (error) {
           console.error('Error getting event list:', error.message);
+        } finally {
+          setLoading(false);
         }
       };
       fetchData();
-    }, [])
+    }, [userId])
   );
 
   const updateScore = async () => {
     try {
-      const updatedData = await getPersonalMeritDetail(user_id);
+      const updatedData = await getPersonalMeritDetail(userId);
       if (updatedData && updatedData.length > 0) {
         return updatedData[0].score;
       }
@@ -74,6 +79,14 @@ const ActivityTable = ({ user_id }) => {
         return 'question';
     }
   };
+
+  if (loading) {
+    return (
+      <View className="flex justify-center items-center top-3">
+        <ActivityIndicator animating={true} color="#ffffff" size="small" />
+      </View>
+    );
+  }
 
   return (
     <View className="w-10/12 flex justify-end min-h-[65%] max-h-[75%]">

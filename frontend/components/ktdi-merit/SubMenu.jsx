@@ -4,7 +4,7 @@ import ChooseRoomModal from './ChooseRoomModal';
 import { View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const SubMenu = ({ visible, setVisible, user_id}) => {
+const SubMenu = ({ visible, setVisible, userId, gender}) => {
   const [openRoomModal, setOpenRoomModal] = useState(false);
   const navigation = useNavigation(); // Use navigation hook
 
@@ -54,7 +54,7 @@ const SubMenu = ({ visible, setVisible, user_id}) => {
           />
         </Modal>
       </Portal>
-      <ChooseRoomModal visible={openRoomModal} setVisible={setOpenRoomModal} user_id={user_id} />
+      <ChooseRoomModal visible={openRoomModal} setVisible={setOpenRoomModal} userId={userId} gender={gender} />
     </View>
   );
 };

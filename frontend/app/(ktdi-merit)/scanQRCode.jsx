@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Button, Image, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, ToastAndroid } from 'react-native';
 import { CameraView, Camera } from 'expo-camera';
 import DecodeQR from '../../components/ktdi-merit/DecodeQR';
 import { recordMerit } from '../../services/manageMerit';
 import { useNavigation } from '@react-navigation/native';
-
+import * as SecureStore from 'expo-secure-store';
 
 const ScanQRCode = () => {
+  const [userId, setUserId] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const navigation = useNavigation(); 
-  //Temporary user id_
-  const user_id = "1a473cd0-9c4d-4a80-bcd6-cfcd2448a430";
 
   // Request camera permissions
   useEffect(() => {
@@ -19,7 +18,22 @@ const ScanQRCode = () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === 'granted');
     };
+    
+    const loadUserId = async () => {
+      try {
+        const storedUserId = await SecureStore.getItemAsync('userId');
+        if (storedUserId) {
+          setUserId(storedUserId);
+        } else {
+          console.log('No userId found');
+        }
+      } catch (error) {
+        console.error('Error retrieving userId:', error);
+      }
+    };
+  
     getCameraPermissions();
+    loadUserId();
   }, []);
 
   const handleScanSuccess = async ({ type, data }) => {
@@ -28,7 +42,7 @@ const ScanQRCode = () => {
       console.log("data: ", data);
       const [eventData] = JSON.parse(data);
       console.log("eventData: ", eventData);
-      const result = await recordMerit(user_id, eventData);
+      const result = await recordMerit(userId, eventData);
       console.log(result);
       if (result === "success") {
         ToastAndroid.show("Merit successfully recorded!", ToastAndroid.LONG);
@@ -67,7 +81,7 @@ const ScanQRCode = () => {
       </CameraView>
       <View className="absolute w-1.2 h-2 border bg-slate-500"></View>
 
-      <DecodeQR user_id={user_id}/>
+      <DecodeQR userId={userId}/>
     </View>
   );
 };
