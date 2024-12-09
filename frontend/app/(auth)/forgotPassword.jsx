@@ -23,19 +23,19 @@ const ForgotPassword = () => {
 
     try {
         const checkResponse = await passwordService.checkEmailExistence({ email });
-        console.log('Check Email Response:', checkResponse); // Log the response
-        if (checkResponse.exists) {
-            const otpResponse = await passwordService.sendOTP({ email });
-            console.log('Send OTP Response:', otpResponse); // Log the response
-            if (otpResponse?.status === 'success') {
-                Alert.alert('Success', otpResponse.message);
-                navigation.navigate('enterOTP', { email });
-            } else {
-                setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
-            }
-        } else {
-            setErrorMessage('Email not found!');
-        }
+        // console.log('Check Email Response:', checkResponse); // Log the response
+        // if (checkResponse.exists) {
+        //     const otpResponse = await passwordService.sendOTP({ email });
+        //     console.log('Send OTP Response:', otpResponse); // Log the response
+        //     if (otpResponse?.status === 'success') {
+        //         Alert.alert('Success', otpResponse.message);
+        //         navigation.navigate('enterOTP', { email });
+        //     } else {
+        //         setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
+        //     }
+        // } else {
+        //     setErrorMessage('Email not found!');
+        // }
     } catch (error) {
         console.error('Error in handleSubmit:', error); // Log the error
         setErrorMessage(error.message || 'An error occurred. Please try again.');

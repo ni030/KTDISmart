@@ -14,7 +14,7 @@ export default function index() {
 
     const { setUserLocation, setDestinationLocation } = useLocationStore();
     const [ hasPermissions, setHasPermissions ] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [ errorMessage, setErrorMessage] = useState('');
     
     useEffect(()=>{
         const requestLocation = async () => {

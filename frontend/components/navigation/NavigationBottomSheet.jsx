@@ -1,14 +1,21 @@
-import React, { useCallback, useMemo, useRef } from "react"
-import { StyleSheet, View, Text, Keyboard } from "react-native";
+import React, { useCallback, useMemo, useRef, useState } from "react"
+import { Image, StyleSheet, TouchableOpacity, View, Text, Keyboard } from "react-native";
 import BottomSheet, {BottomSheetView} from "@gorhom/bottom-sheet";
 import GoogleTextInput from "./GoogleTextInput";
 import { useLocationStore } from "../../store";
 import { saveSearchLocation } from "../../services/manageLocation";
+import { getRubbishBin, getShop, getWaterDispenser } from "../../services/manageAmenity";
+
 
 const NavigationBottomSheet = ({
     mapRef,
     userLatitude,
-    userLongitude
+    userLongitude,
+    setLocations,
+    setShowWaterDispensers, 
+    setShowRubbishBins, 
+    setShowShops,
+    setDestination,
 }) => {
     const snapPoints = useMemo(()=>['14%','50%','92%']);
     const bottomSheetRef = useRef(null);
@@ -57,6 +64,55 @@ const NavigationBottomSheet = ({
         console.log(address)
         saveSearchLocation(matric,latitude,longitude,address)
     };
+    const [activeIcons, setActiveIcons] = useState({
+        waterDispenser: false,
+        rubbishBin: false,
+        shop: false,
+    });
+    const handleIconPress= async (category)=>{
+        setActiveIcons((prev) => ({
+            waterDispenser: category === 'waterDispenser' ? !prev.waterDispenser : false,
+            rubbishBin: category === 'rubbishBin' ? !prev.rubbishBin : false,
+            shop: category === 'shop' ? !prev.shop : false,
+        }));
+
+        let fetchedLocations=[];
+        bottomSheetRef.current.snapToIndex(0);
+        switch(category){
+            case 'waterDispenser':
+                console.log("Water dispenser")
+                fetchedLocations=await getWaterDispenser();
+                setShowWaterDispensers(prev => !prev);
+                setShowRubbishBins(false);
+                setShowShops(false);
+                break;
+            case 'rubbishBin':
+                fetchedLocations=await getRubbishBin();
+                setShowRubbishBins(prev => !prev);
+                setShowWaterDispensers(false);
+                setShowShops(false);
+                break;
+            case 'shop':
+                fetchedLocations=await getShop();
+                setShowShops(prev => !prev);
+                setShowWaterDispensers(false);
+                setShowRubbishBins(false);
+                break;
+            default:
+                break;
+        }
+        if(fetchedLocations.length>0){
+            setLocations(fetchedLocations);
+            // moveToLocation(fetchedLocations[0].latitude,fetchedLocations[0].longitude);
+            const latitude = 1.5653874070967202;
+            const longitude = 103.63521469255664;
+            mapRef.current.animateToRegion({latitude,longitude,latitudeDelta:0.005,longitudeDelta:0.005},1000)
+            console.log("Fetched Locations:",fetchedLocations);
+        }else{
+            console.log("No locations found")
+        }
+    }
+    
 
     const styles = StyleSheet.create({
         handleIndicator: {
@@ -106,15 +162,46 @@ const NavigationBottomSheet = ({
             color:'white'
         },
         favouriteContainer: {
-            // flex:3,
-            // marginLeft: 22,
-            alignContent:'center',
-            justifyContent:'center',
-            width:"90%",
-            height: 160,           
-            backgroundColor:'#a1335d',
-            borderRadius:20,
-            marginBottom:10
+            width: "90%",
+            backgroundColor: '#a1335d',
+            borderRadius: 20,
+            alignItems: "center",  // Centering the content horizontally
+            marginTop: 10,
+            paddingHorizontal: 10,
+            paddingVertical: 20,
+        }, 
+        iconRow: {
+            flexDirection: "row", // Layout items in a row (horizontally)
+            justifyContent: "space-between", // Evenly distribute columns
+            width: "100%",
+            marginTop:5,
+            marginBottom: 10, // Space between the rows
+        },
+        iconColumn: {
+            flex: 1, // Distribute each column equally
+            justifyContent: "center", // Center both the icon and title vertically
+            alignItems: "center", // Center both the icon and title horizontally
+            marginHorizontal: 10, // Add spacing between columns
+            height:100
+        },
+        iconImage: {
+            width: 70,
+            height: 70,
+            resizeMode: "contain",
+        },
+        activeIcon: {
+            // borderWidth: 1,
+            borderColor: "white", // Example highlight color
+            borderRadius: 20, // Adjust for rounded icon
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+        },
+        iconTitle: {
+            fontSize: 14,
+            color: "white",
+            fontWeight: "400",
+            textAlign: "center", // Horizontally center the title
+            alignContent: "center",
+            marginTop: 10, // Space between icon and title
         },
         recentsContainer: {
             // flex:3,
@@ -152,10 +239,10 @@ const NavigationBottomSheet = ({
                 handleIndicatorStyle={styles.handleIndicator}
                 handleStyle={styles.handle}
                 backgroundStyle={{
-                    backgroundColor: '#f7dae5',
-                    borderTopLeftRadius: 20, // Set consistent border radius
-                    borderTopRightRadius: 20,
-                }}
+                backgroundColor: '#f7dae5',
+                borderTopLeftRadius: 20, // Set consistent border radius
+                borderTopRightRadius: 20,
+            }}
             >
                 <BottomSheetView style={styles.contentContainer}>
                     <GoogleTextInput
@@ -163,12 +250,41 @@ const NavigationBottomSheet = ({
                         handlePress={handleDestinationPress}
                         moveMap={moveToLocation}
                         bottomSheetRef={bottomSheetRef}
+                        setDestination={setDestination}
                     />
                     <View className="w-full">
                         <Text style={styles.title}>Favourites</Text>
                     </View>
                     <View style={styles.favouriteContainer}>
-                        <Text></Text>
+                        <View style={styles.iconRow}>
+                            <View style={styles.iconColumn}>
+                            <TouchableOpacity onPress={() => handleIconPress('waterDispenser')}>
+                                <Image
+                                source={require("../../assets/search.png")}
+                                style={[styles.iconImage,activeIcons.waterDispenser && styles.activeIcon]}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.iconTitle}>Water Dispenser</Text>
+                            </View>
+                            <View style={styles.iconColumn}>
+                            <TouchableOpacity onPress={() => handleIconPress('rubbishBin')}>
+                                <Image
+                                source={require("../../assets/search.png")}
+                                style={[styles.iconImage,activeIcons.rubbishBin && styles.activeIcon]}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.iconTitle}>Rubbish{"\n"}Bins</Text>
+                            </View>
+                            <View style={styles.iconColumn}>
+                            <TouchableOpacity onPress={() => handleIconPress('shop')}>
+                                <Image
+                                source={require("../../assets/search.png")}
+                                style={[styles.iconImage, activeIcons.shop && styles.activeIcon]}
+                                />
+                            </TouchableOpacity>
+                            <Text style={styles.iconTitle}>Shop & Restaurant</Text>
+                            </View>
+                        </View>
                     </View>
                     <View className="w-full">
                         <Text style={styles.title}>Recents</Text>
