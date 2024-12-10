@@ -17,7 +17,7 @@ const NavigationBottomSheet = ({
     setShowShops,
     setDestination,
 }) => {
-    const snapPoints = useMemo(()=>['14%','50%','92%']);
+    const snapPoints = useMemo(()=>['22.5%','50.5%','92%']);
     const bottomSheetRef = useRef(null);
     const handleSheetChanges = useCallback((index) => {
         if(index!==2){
@@ -166,7 +166,7 @@ const NavigationBottomSheet = ({
             backgroundColor: '#a1335d',
             borderRadius: 20,
             alignItems: "center",  // Centering the content horizontally
-            marginTop: 10,
+            // marginTop: 10,
             paddingHorizontal: 10,
             paddingVertical: 20,
         }, 
@@ -185,15 +185,16 @@ const NavigationBottomSheet = ({
             height:100
         },
         iconImage: {
-            width: 70,
-            height: 70,
+            width: 60,
+            height: 60,
             resizeMode: "contain",
         },
         activeIcon: {
             // borderWidth: 1,
             borderColor: "white", // Example highlight color
-            borderRadius: 20, // Adjust for rounded icon
+            borderRadius: 40, // Adjust for rounded icon
             backgroundColor: "rgba(0, 0, 0, 0.3)",
+            color: "rgba(0, 0, 0, 0.3)",
         },
         iconTitle: {
             fontSize: 14,
@@ -209,7 +210,7 @@ const NavigationBottomSheet = ({
             alignContent:'center',
             justifyContent:'center',
             width:"90%",
-            height: 160,           
+            height: 140,           
             backgroundColor:'#a1335d',
             borderRadius:20,
             marginBottom:15
@@ -260,7 +261,7 @@ const NavigationBottomSheet = ({
                             <View style={styles.iconColumn}>
                             <TouchableOpacity onPress={() => handleIconPress('waterDispenser')}>
                                 <Image
-                                source={require("../../assets/search.png")}
+                                source={require("../../assets/waterDispenser.png")}
                                 style={[styles.iconImage,activeIcons.waterDispenser && styles.activeIcon]}
                                 />
                             </TouchableOpacity>
@@ -269,7 +270,7 @@ const NavigationBottomSheet = ({
                             <View style={styles.iconColumn}>
                             <TouchableOpacity onPress={() => handleIconPress('rubbishBin')}>
                                 <Image
-                                source={require("../../assets/search.png")}
+                                source={require("../../assets/rubbishBin.png")}
                                 style={[styles.iconImage,activeIcons.rubbishBin && styles.activeIcon]}
                                 />
                             </TouchableOpacity>
@@ -278,7 +279,7 @@ const NavigationBottomSheet = ({
                             <View style={styles.iconColumn}>
                             <TouchableOpacity onPress={() => handleIconPress('shop')}>
                                 <Image
-                                source={require("../../assets/search.png")}
+                                source={require("../../assets/shop.png")}
                                 style={[styles.iconImage, activeIcons.shop && styles.activeIcon]}
                                 />
                             </TouchableOpacity>

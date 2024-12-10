@@ -206,10 +206,10 @@ const NavigationMap = () => {
                     onReady={(result) => {
                         mapRef.current.fitToCoordinates(result.coordinates, {
                             edgePadding: {
-                                right: 20,
-                                bottom: 20,
-                                left: 20,
-                                top: 20,
+                                right: 30,
+                                bottom: 30,
+                                left: 30,
+                                top: 30,
                             },
                         });
                     }}
@@ -242,7 +242,7 @@ const NavigationMap = () => {
                     style={styles.terminateButton}
                     onPress={handleTerminateRouting}
                 >
-                    <Text style={styles.terminateButtonText}>Terminate</Text>
+                    <Text style={styles.terminateButtonText}>Terminate Routing</Text>
                 </TouchableOpacity>
             )}
 

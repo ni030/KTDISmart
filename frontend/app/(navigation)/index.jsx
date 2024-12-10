@@ -59,7 +59,7 @@ export default function index() {
                         address: 'Address not found',
                     });
                 }
-                saveCurrentLocation(matric,latitude,longitude)
+                // saveCurrentLocation(matric,latitude,longitude)
             }
         };
 
