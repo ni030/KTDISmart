@@ -124,8 +124,9 @@ const HomePage = () => {
           <Text style={styles.rowText}>F A C I L I T I E S</Text>
           <FontAwesome name="arrow-circle-right" size={25} color="#ffffff" style={styles.arrowIcon} />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
+
   );
 };
 
