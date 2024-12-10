@@ -120,7 +120,7 @@ const NavigationBottomSheet = ({
             marginTop: 3,
         },
         handle: {
-            backgroundColor: '#f7dae5', // Change to your desired color
+            backgroundColor: '#ffedf1', // Change to your desired color
             height: 25, // Adjust height as needed
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
@@ -142,7 +142,7 @@ const NavigationBottomSheet = ({
             flex: 1,
             zIndex:3,
             alignItems: 'center',
-            backgroundColor:'#f7dae5', //ok
+            backgroundColor:'#ffedf1', //ok
             color:'#f7dae5'
         },
         title:{
@@ -163,7 +163,7 @@ const NavigationBottomSheet = ({
         },
         favouriteContainer: {
             width: "90%",
-            backgroundColor: '#a1335d',
+            backgroundColor: '#BD708D',
             borderRadius: 20,
             alignItems: "center",  // Centering the content horizontally
             // marginTop: 10,

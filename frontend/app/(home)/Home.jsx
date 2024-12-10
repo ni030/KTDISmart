@@ -103,7 +103,7 @@ const HomePage = () => {
       <Text style={styles.heading}>KTDI Smart Services</Text>
 
       {/* Navigation Rows */}
-      <ScrollView style={styles.rowContainer}>
+      <View style={styles.rowContainer}>
         <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('(complaint)')}>
           <FontAwesome name="exclamation-circle" size={45} color="#ffffff" style={styles.icon} />
           <Text style={styles.rowText}>C O M P L A I N T</Text>
@@ -121,7 +121,7 @@ const HomePage = () => {
           <Text style={styles.rowText}>F A C I L I T I E S</Text>
           <FontAwesome name="arrow-circle-right" size={25} color="#ffffff" style={styles.arrowIcon} />
         </TouchableOpacity>
-      </ScrollView>
+      </View>
     </View>
   );
 };
