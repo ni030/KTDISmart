@@ -14,7 +14,7 @@ export default function index() {
 
     const { setUserLocation, setDestinationLocation } = useLocationStore();
     const [ hasPermissions, setHasPermissions ] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [ errorMessage, setErrorMessage] = useState('');
     
     useEffect(()=>{
         const requestLocation = async () => {
@@ -59,7 +59,7 @@ export default function index() {
                         address: 'Address not found',
                     });
                 }
-                saveCurrentLocation(matric,latitude,longitude)
+                // saveCurrentLocation(matric,latitude,longitude)
             }
         };
 

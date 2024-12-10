@@ -32,7 +32,7 @@ const GoogleTextInput=({
     handlePress,
     moveMap,
     bottomSheetRef,
-
+    
 })=>{
     const handleFocus = () => {
         bottomSheetRef.current.snapToIndex(2); // Snap to 90% when input is focused
@@ -89,6 +89,10 @@ const GoogleTextInput=({
                     longitude: details?.geometry.location.lng,
                     address: data.description,
                 });
+                let destination = {
+                    latitude: details?.geometry.location.lat,
+                    longitude: details?.geometry.location.lng,
+                }
             }}
             query={{
                 key: googlePlacesApiKey,

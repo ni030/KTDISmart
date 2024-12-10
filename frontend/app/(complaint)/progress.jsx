@@ -14,7 +14,8 @@ const Progress = () => {
     } else if (complaint.completed_time) {
       return 'Congratulations, your problem has been resolved!';
     } else {
-      return `Estimated Construction Date: ${new Date(complaint.estimated_time).toLocaleDateString()}`;
+      const formattedDate = new Intl.DateTimeFormat('en-GB').format(new Date(complaint.estimated_time));
+      return `Estimated Construction Date: ${formattedDate}`;
     }
   };
 
