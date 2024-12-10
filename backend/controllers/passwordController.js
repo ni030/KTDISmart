@@ -7,12 +7,9 @@ const passwordController = {
 
     //Check if Email Exists
     checkEmailExistence: async (req, res) => {
-        console.log("Checking emailexistance...");
-        const { email } = req.body;
-
+        const data = req.body.data.email;
         try {
-            const user = await req.sql`SELECT * FROM user_credentials WHERE email = ${email}`;
-            console.log("backend check email", user);
+            const user = await req.sql`SELECT * FROM user_credentials WHERE email = ${data}`;
             if (user.length > 0) {
                 return res.status(200).json({ exists: true, message: 'Email exists!' });
             } else {
@@ -34,7 +31,7 @@ const passwordController = {
                 SELECT * FROM user_credentials WHERE email = ${email}
             `;
             if (user.length === 0) {
-                return res.status(404).json({ message: 'Email not found!' });
+                return res.status(400).json({ message: 'Email not found!' });
             }
 
             const otp = generateOTP();
@@ -42,17 +39,17 @@ const passwordController = {
                 INSERT INTO password_reset_requests (email, otp) VALUES (${email}, ${otp})
             `;
 
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: { user: 'your-email@gmail.com', pass: 'your-password' },
-            });
+            // const transporter = nodemailer.createTransport({
+            //     service: 'gmail',
+            //     auth: { user: 'your-email@gmail.com', pass: 'your-password' },
+            // });
 
-            await transporter.sendMail({
-                from: 'your-email@gmail.com',
-                to: email,
-                subject: 'Password Reset OTP',
-                text: `Your OTP is: ${otp}. It will expire in 10 minutes.`,
-            });
+            // await transporter.sendMail({
+            //     from: 'your-email@gmail.com',
+            //     to: email,
+            //     subject: 'Password Reset OTP',
+            //     text: `Your OTP is: ${otp}. It will expire in 10 minutes.`,
+            // });
 
             res.status(200).json({ message: 'OTP sent successfully!' });
         } catch (error) {

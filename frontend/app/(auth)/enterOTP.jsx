@@ -1,33 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import passwordService from './../../services/passwordService';
+import { useNavigation } from '@react-navigation/native';
 
 const EnterOTP = () => {
-  const [otp, setOtp] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
-  const route = useRoute();
-  const { email } = route.params || {};
-
-  const handleSubmitOTP = async () => {
-    if (otp.length !== 4) {
-      setErrorMessage('OTP must be 4 digits');
-      return;
-    }
-
-    try {
-      const response = await passwordService.verifyOTP({ email, otp });
-      if (response?.status === 'success') {
-        Alert.alert('Success', response.message);
-        navigation.navigate('resetPassword', { email });
-      } else {
-        setErrorMessage(response?.message || 'Invalid OTP');
-      }
-    } catch (error) {
-      setErrorMessage(error.message || 'An error occurred. Please try again.');
-    }
-  };
+  const [otp, setOtp] = useState('');
 
   return (
     <ImageBackground
@@ -35,21 +12,34 @@ const EnterOTP = () => {
       style={styles.background}
       resizeMode="cover"
     >
-      <View style={styles.overlay} />
       <View style={styles.container}>
         <Text style={styles.title}>Enter OTP</Text>
-        <Text style={styles.subtitle}>A 4-digit code has been sent to your email.</Text>
+        <Text style={styles.subtitle}>
+          A 4-digit code has been sent to your email or phone.
+        </Text>
         <TextInput
-          style={styles.input}
-          placeholder="Enter OTP"
-          keyboardType="numeric"
+          style={styles.otpInput}
           maxLength={4}
+          keyboardType="number-pad"
           value={otp}
           onChangeText={setOtp}
+          placeholder="OTP"
+          placeholderTextColor="#ccc"
         />
-        {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
-        <TouchableOpacity style={styles.button} onPress={handleSubmitOTP}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if (otp === '2234') {
+              navigation.navigate('resetPassword');
+            } else {
+              Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
+            }
+          }}
+        >
           <Text style={styles.buttonText}>Submit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => {}}>
+          <Text style={styles.resendText}>Resend OTP</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -62,9 +52,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -75,33 +62,30 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#a02c4c', 
+    color: '#a02c4c',
   },
   subtitle: {
     textAlign: 'center',
     fontSize: 16,
-    color: 'black', 
+    color: 'black',
     marginBottom: 20,
   },
-  otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    marginTop:20,
-    marginBottom: 50,
-  },
   otpInput: {
-    width: 50,
+    width: '50%',
     height: 50,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
+    borderRadius: 12,
     textAlign: 'center',
     fontSize: 20,
+    marginBottom: 20,
+    marginTop: 15,
+    paddingHorizontal: 10,
+    color: 'black',
   },
   resendText: {
     color: 'gray',
-    marginTop: 25,
+    marginTop: 18,
   },
   button: {
     backgroundColor: '#a02c4c',
@@ -109,10 +93,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 15,
     paddingHorizontal: 30,
+    marginTop: 10,
   },
   buttonText: {
     color: '#fff',
-    textAlign:'center',
+    textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
   },

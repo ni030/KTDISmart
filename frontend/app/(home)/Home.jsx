@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Linking } from 'react-native';
+import { View, Text, Image, ScrollView, TouchableOpacity, StyleSheet, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as SecureStore from 'expo-secure-store';
@@ -103,7 +103,7 @@ const HomePage = () => {
       <Text style={styles.heading}>KTDI Smart Services</Text>
 
       {/* Navigation Rows */}
-      <View style={styles.rowContainer}>
+      <ScrollView style={styles.rowContainer}>
         <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('(complaint)')}>
           <FontAwesome name="exclamation-circle" size={45} color="#ffffff" style={styles.icon} />
           <Text style={styles.rowText}>C O M P L A I N T</Text>
@@ -121,7 +121,7 @@ const HomePage = () => {
           <Text style={styles.rowText}>F A C I L I T I E S</Text>
           <FontAwesome name="arrow-circle-right" size={25} color="#ffffff" style={styles.arrowIcon} />
         </TouchableOpacity>
-      </View>
+      </ScrollView>
     </View>
   );
 };

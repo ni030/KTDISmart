@@ -23,19 +23,19 @@ const ForgotPassword = () => {
 
     try {
         const checkResponse = await passwordService.checkEmailExistence({ email });
-        // console.log('Check Email Response:', checkResponse); // Log the response
-        // if (checkResponse.exists) {
+        console.log('Check Email Response:', checkResponse.exists); // Log the response
+        if (checkResponse.exists) {
         //     const otpResponse = await passwordService.sendOTP({ email });
         //     console.log('Send OTP Response:', otpResponse); // Log the response
         //     if (otpResponse?.status === 'success') {
-        //         Alert.alert('Success', otpResponse.message);
-        //         navigation.navigate('enterOTP', { email });
+                //Alert.alert('Success', otpResponse.message);
+                navigation.navigate('enterOTP', { email });
         //     } else {
         //         setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
         //     }
-        // } else {
-        //     setErrorMessage('Email not found!');
-        // }
+        } else {
+            setErrorMessage('Email not found!');
+        }
     } catch (error) {
         console.error('Error in handleSubmit:', error); // Log the error
         setErrorMessage(error.message || 'An error occurred. Please try again.');
@@ -99,14 +99,13 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 50,
-    borderWidth: 1,
+    height: 40, // Reduce the height for a bar-like appearance
+    borderBottomWidth: 1, // Add a bottom border for a minimalistic style
     borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
+    paddingHorizontal: 10, // Add horizontal padding for better spacing
     marginBottom: 20,
     fontSize: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+    backgroundColor: 'transparent', // Make it transparent for a cleaner look
     color: '#000',
   },
   button: {

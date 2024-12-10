@@ -8,4 +8,5 @@ router.post('/verifyOTP', passwordController.verifyOTP);
 router.post('/resetPassword', passwordController.resetPassword);
 router.post('/checkEmailExistence', passwordController.checkEmailExistence);
 
-module.exports = router;
+module.exports = router
+
