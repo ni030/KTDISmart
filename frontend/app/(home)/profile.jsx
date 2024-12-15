@@ -47,6 +47,13 @@ const UserProfile = () => {
         <View contentContainerStyle={styles.scrollContent}>
           {/* Header Section */}
           <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.goBack()} // Go back to the previous screen
+            >
+              <FontAwesome name="arrow-left" size={24} color="#ffff" />
+            </TouchableOpacity>
+
             {user && user.profile_picture ? (
               <Image
                 source={{ uri: user.profile_picture }} // Use the user's profile picture
@@ -132,6 +139,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  backButton: {
+    position: 'absolute',
+    top:-45,
+    left: 20,
+    padding: 10,
+  
+  },
   profileImage: {
     width: 120,
     height: 120,
@@ -142,14 +156,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   name: {
-    paddingTop:3,
+    paddingTop: 3,
     fontSize: 25,
     fontWeight: 'bold',
     color: '#343a40',
   },
   subtitle: {
     fontSize: 14,
-    color: '#6c757d', 
+    color: '#6c757d',
     marginTop: 5,
   },
   editProfileButton: {
@@ -165,9 +179,8 @@ const styles = StyleSheet.create({
   },
   section: {
     marginVertical: 20,
-    paddingTop:20,
-    paddingLeft:35,
-
+    paddingTop: 20,
+    paddingLeft: 35,
   },
   sectionTitle: {
     fontSize: 22,
@@ -181,23 +194,21 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontSize: 16,
-    fontWeight: 'bold', 
+    fontWeight: 'bold',
   },
-
   logoutButton: {
     backgroundColor: '#A1335D',
-    paddingVertical: 10, 
-    paddingHorizontal: 45, 
-    borderRadius: 28, 
-    alignSelf: 'center', 
-    marginTop: 45, 
-    
+    paddingVertical: 10,
+    paddingHorizontal: 45,
+    borderRadius: 28,
+    alignSelf: 'center',
+    marginTop: 45,
   },
   logoutButtonText: {
     color: '#fff',
-    fontSize: 18, 
+    fontSize: 18,
     fontWeight: 'bold',
-    textAlign: 'center', 
+    textAlign: 'center',
   },
 });
 
