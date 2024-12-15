@@ -10,7 +10,7 @@ const userController = {
     register: async (req, res) => {
         console.log("Registering user...");
     
-        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture } = req.body;
+        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture, block, roomNumber } = req.body;
     
         try {
             // Check if the user already exists in the database
@@ -40,10 +40,10 @@ const userController = {
             // Generate a UUID for profile_id
             const profileId = uuidv4();
     
-            // Insert into user_profile with profile picture URL
+            // Insert into user_profile
             const profileResponse = await req.sql`
-                INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture)
-                VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture})`;
+            INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture, block, roomnumber)
+            VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture}, ${block}, ${roomNumber})`;
     
             // Respond with a success message
             res.status(201).json({ message: 'User registered successfully' });
@@ -51,7 +51,7 @@ const userController = {
             console.error('Error during user registration:', error);
             res.status(500).json({ message: 'Server error', error: error.message });
         }
-    },    
+    },
 
     // LOGIN ----------------------------------------------------------------
     login: async (req, res) => {

@@ -208,6 +208,16 @@ const Register = () => {
     setIsLoading(true);
 
     try {
+      //Assign room number here
+      let block, roomNumber;
+      if (formData.gender === 'Male') {
+        block = 'MA1';
+        roomNumber = Math.floor(Math.random() * (250 - 200 + 1)) + 200;  // Random room between 200 and 250
+      } else if (formData.gender === 'Female') {
+        block = 'MA5';
+        roomNumber = Math.floor(Math.random() * (350 - 300 + 1)) + 300;  // Random room between 300 and 350
+      }
+
       const payload = {
         username: formData.username,
         email: formData.email,
@@ -218,6 +228,8 @@ const Register = () => {
         gender: formData.gender,
         programmecode: formData.programmeCode,
         profilePicture: formData.profilePicture,
+        block: block,        
+        roomNumber: roomNumber,
       };
 
       console.log('Register | Payload:', payload);
