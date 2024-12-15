@@ -10,7 +10,7 @@ const userController = {
     register: async (req, res) => {
         console.log("Registering user...");
     
-        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture, block, roomNumber } = req.body;
+        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture, block, roomNumber, keyNumber } = req.body;
     
         try {
             // Check if the user already exists in the database
@@ -42,8 +42,8 @@ const userController = {
     
             // Insert into user_profile
             const profileResponse = await req.sql`
-            INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture, block, roomnumber)
-            VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture}, ${block}, ${roomNumber})`;
+            INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture, block, roomnumber, keynumber)
+            VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture}, ${block}, ${roomNumber}, ${keyNumber})`;
     
             // Respond with a success message
             res.status(201).json({ message: 'User registered successfully' });
@@ -138,7 +138,10 @@ const userController = {
                     up.matricno,
                     up.gender,
                     up.programmecode,
-                    up.profile_picture
+                    up.profile_picture,
+                    up.block,
+                    up.roomnumber,
+                    up.keynumber
                 FROM user_credentials uc
                 INNER JOIN user_profile up ON uc.user_id = up.user_id
                 WHERE uc.user_id = ${userId}`;
