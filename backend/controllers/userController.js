@@ -84,6 +84,7 @@ const userController = {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     },
+    //check user exist
     checkIsUserExist: async (req, res) => {
         const METHOD = "CheckIsUserExist Controller";
         console.log(`${METHOD} | start`);
@@ -120,6 +121,7 @@ const userController = {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     },
+    
     getUserById: async (req, res) => {
         const METHOD = "GetUserById Controller";
         console.log(`${METHOD} | start`);
@@ -156,7 +158,49 @@ const userController = {
             console.error(`${METHOD} | Error during fetch:`, error);
             res.status(500).json({ message: 'Server error', error: error.message });
         }
+    },
+
+    updateUser: async (req, res) => {
+
+        console.log("Updating user...");
+   
+        const { userId } = req.params; // Get userId from URL parameters
+        const { programmecode, email, password, profile_picture } = req.body;
+   
+        try {
+            // If password is provide, hash it
+            let hashedPassword = undefined;
+            if (password) {
+                const saltRounds = 10;
+                hashedPassword = await bcrypt.hash(password, saltRounds);
+            }
+   
+            //then save to db
+            if (password) {
+                const updateCredentialsQuery = `
+                    UPDATE user_credentials
+                    SET password = ${hashedPassword}
+                    WHERE user_id = ${userId}`;
+                await req.sql(updateCredentialsQuery);
+            }
+   
+            const updateProfileQuery = `
+                UPDATE user_profile
+                SET programmecode = ${programmecode ? programmecode : 'programmecode'},
+                    email = ${email ? email : 'email'},
+                    profile_picture = ${profile_picture ? profile_picture : 'profile_picture'}
+                WHERE user_id = ${userId}`;
+            await req.sql(updateProfileQuery);
+   
+            // Respond with a success message
+            res.status(200).json({ message: 'User updated successfully' });
+   
+        } catch (error) {
+            console.error('Error during user update:', error);
+            res.status(500).json({ message: 'Server error', error: error.message });
+        }
     }
+
 };
 
 module.exports = userController;

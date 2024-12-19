@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Alert, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ImageBackground } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as SecureStore from 'expo-secure-store';
@@ -51,7 +51,7 @@ const UserProfile = () => {
               style={styles.backButton}
               onPress={() => navigation.goBack()} // Go back to the previous screen
             >
-              <FontAwesome name="arrow-left" size={24} color="#ffff" />
+              <FontAwesome name="arrow-left" size={24} color="#fff" />
             </TouchableOpacity>
 
             {user && user.profile_picture ? (
@@ -68,8 +68,11 @@ const UserProfile = () => {
               />
             )}
             <Text style={styles.name}>{user ? user.name : 'Loading...'}</Text>
-            <Text style={styles.subtitle}>Undergraduate  student   |   Resident</Text>
-            <TouchableOpacity style={styles.editProfileButton}>
+            <Text style={styles.subtitle}>Undergraduate student | Resident</Text>
+            <TouchableOpacity
+              style={styles.editProfileButton}
+              onPress={() => navigation.navigate('editProfile')} // Navigate to EditProfile screen
+            >
               <Text style={styles.editProfileText}>Edit Profile</Text>
             </TouchableOpacity>
           </View>
@@ -141,10 +144,9 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top:-45,
+    top: -40,
     left: 20,
     padding: 10,
-  
   },
   profileImage: {
     width: 120,
