@@ -10,7 +10,7 @@ const userController = {
     register: async (req, res) => {
         console.log("Registering user...");
     
-        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture } = req.body;
+        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture, block, roomNumber, keyNumber } = req.body;
     
         try {
             // Check if the user already exists in the database
@@ -40,10 +40,10 @@ const userController = {
             // Generate a UUID for profile_id
             const profileId = uuidv4();
     
-            // Insert into user_profile with profile picture URL
+            // Insert into user_profile
             const profileResponse = await req.sql`
-                INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture)
-                VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture})`;
+            INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture, block, roomnumber, keynumber)
+            VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture}, ${block}, ${roomNumber}, ${keyNumber})`;
     
             // Respond with a success message
             res.status(201).json({ message: 'User registered successfully' });
@@ -51,7 +51,7 @@ const userController = {
             console.error('Error during user registration:', error);
             res.status(500).json({ message: 'Server error', error: error.message });
         }
-    },    
+    },
 
     // LOGIN ----------------------------------------------------------------
     login: async (req, res) => {
@@ -84,6 +84,7 @@ const userController = {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     },
+    //check user exist
     checkIsUserExist: async (req, res) => {
         const METHOD = "CheckIsUserExist Controller";
         console.log(`${METHOD} | start`);
@@ -120,6 +121,7 @@ const userController = {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     },
+    
     getUserById: async (req, res) => {
         const METHOD = "GetUserById Controller";
         console.log(`${METHOD} | start`);
@@ -138,7 +140,10 @@ const userController = {
                     up.matricno,
                     up.gender,
                     up.programmecode,
-                    up.profile_picture
+                    up.profile_picture,
+                    up.block,
+                    up.roomnumber,
+                    up.keynumber
                 FROM user_credentials uc
                 INNER JOIN user_profile up ON uc.user_id = up.user_id
                 WHERE uc.user_id = ${userId}`;
@@ -153,7 +158,49 @@ const userController = {
             console.error(`${METHOD} | Error during fetch:`, error);
             res.status(500).json({ message: 'Server error', error: error.message });
         }
+    },
+
+    updateUser: async (req, res) => {
+
+        console.log("Updating user...");
+   
+        const { userId } = req.params; // Get userId from URL parameters
+        const { programmecode, email, password, profile_picture } = req.body;
+   
+        try {
+            // If password is provide, hash it
+            let hashedPassword = undefined;
+            if (password) {
+                const saltRounds = 10;
+                hashedPassword = await bcrypt.hash(password, saltRounds);
+            }
+   
+            //then save to db
+            if (password) {
+                const updateCredentialsQuery = `
+                    UPDATE user_credentials
+                    SET password = ${hashedPassword}
+                    WHERE user_id = ${userId}`;
+                await req.sql(updateCredentialsQuery);
+            }
+   
+            const updateProfileQuery = `
+                UPDATE user_profile
+                SET programmecode = ${programmecode ? programmecode : 'programmecode'},
+                    email = ${email ? email : 'email'},
+                    profile_picture = ${profile_picture ? profile_picture : 'profile_picture'}
+                WHERE user_id = ${userId}`;
+            await req.sql(updateProfileQuery);
+   
+            // Respond with a success message
+            res.status(200).json({ message: 'User updated successfully' });
+   
+        } catch (error) {
+            console.error('Error during user update:', error);
+            res.status(500).json({ message: 'Server error', error: error.message });
+        }
     }
+
 };
 
 module.exports = userController;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import passwordService from './../../services/passwordService'; // Ensure this service is correctly implemented
+import { sendOtpEmail} from '../../services/resetPasswordService';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -23,19 +24,24 @@ const ForgotPassword = () => {
 
     try {
         const checkResponse = await passwordService.checkEmailExistence({ email });
-        // console.log('Check Email Response:', checkResponse); // Log the response
-        // if (checkResponse.exists) {
-        //     const otpResponse = await passwordService.sendOTP({ email });
-        //     console.log('Send OTP Response:', otpResponse); // Log the response
-        //     if (otpResponse?.status === 'success') {
-        //         Alert.alert('Success', otpResponse.message);
-        //         navigation.navigate('enterOTP', { email });
-        //     } else {
-        //         setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
-        //     }
-        // } else {
-        //     setErrorMessage('Email not found!');
-        // }
+
+        if (checkResponse?.exists) {
+          // Trigger sendOtpEmail
+          //console.log("start to send email")
+          //let email="kxxxcatherine822@gmail.com"
+
+          //const otpResponse = await sendOtpEmail(email);
+          //console.log("otpr", otpResponse)
+  
+          // if (otpResponse?.success) {
+          //     Alert.alert('Success', otpResponse.message || 'OTP has been sent to your email.');
+          //     // Navigate to the enterOTP page, passing the email as a parameter
+          //     navigation.navigate('enterOTP', { email });
+          // } else {
+          //     setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
+          // }
+        }
+        
     } catch (error) {
         console.error('Error in handleSubmit:', error); // Log the error
         setErrorMessage(error.message || 'An error occurred. Please try again.');
@@ -99,14 +105,13 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    height: 50,
-    borderWidth: 1,
+    height: 40, // Reduce the height for a bar-like appearance
+    borderBottomWidth: 1, // Add a bottom border for a minimalistic style
     borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 10,
+    paddingHorizontal: 10, // Add horizontal padding for better spacing
     marginBottom: 20,
     fontSize: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', 
+    backgroundColor: 'transparent', // Make it transparent for a cleaner look
     color: '#000',
   },
   button: {

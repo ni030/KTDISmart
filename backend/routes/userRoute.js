@@ -9,9 +9,11 @@ router.post('/register', userController.register);
 // Login route
 router.post('/login', userController.login);
 
-// checkIsUserExist route
 router.post('/checkIsUserExist', userController.checkIsUserExist);
 
 router.post('/getUserById', userController.getUserById);
+
+router.post('/updateUser', userController.updateUser);
+
 
 module.exports = router;

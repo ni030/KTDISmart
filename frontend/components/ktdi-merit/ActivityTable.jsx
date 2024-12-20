@@ -113,7 +113,7 @@ const ActivityTable = ({ userId }) => {
           </View>
         )}
       </ScrollView>
-      <View className="w-full h-auto p-2 flex flex-row justify-around rounded-md bg-primary-600">
+      <View className="w-full h-auto p-2 flex flex-row justify-around rounded-md bottom-8 bg-primary-600">
         <Text className="font-bold text-white text-lg">Score: {score}</Text>
         <Text className="font-bold text-white text-lg">Batch: {batchNum}</Text>
       </View>
