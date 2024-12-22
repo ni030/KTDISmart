@@ -1,34 +1,70 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
+require("dotenv").config();
+
+// In-memory OTP storage (replace with Redis or DB in production)
+let otpStore = {};
+
+// Generate OTP
+const generateOTP = () => {
+  return crypto.randomInt(100000, 999999).toString();
+};
 
 const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    auth: {
-        user: 'codekx822@gmail.com',
-        pass: 'Testcode123',
-    },
+  service: "Gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
 });
 
 const otpController = {
-    sendOtpEmail: async (req, res) => {
-        console.log("sending email at backend")
-        const { userEmail } = req.body;
-        const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate OTP
+  resetPassword: async (req, res) => {
+    const { email, newPassword } = req.body;
 
-        const mailOptions = {
-            from: 'codekx822@gmail.com',
-            to: email,
-            subject: 'KTDI Smart Reset Password OTP',
-            text: `Your OTP for resetting the password is ${otp}. It will expire in 2 minutes.`,
-        };
+    console.log(`Password reset for ${email}: ${newPassword}`);
+    res.json({ success: true, message: "Password reset successful" });
+  },
+  verifyOTP: (req, res) => {
+    const { email, otp } = req.body;
+    const record = otpStore[email];
 
-        try {
-            await transporter.sendMail(mailOptions);
-            res.status(200).json({ success: true, message: 'OTP sent successfully', otp }); // Include OTP for testing
-        } catch (error) {
-            console.error('Error sending OTP:', error);
-            res.status(500).json({ success: false, message: 'Failed to send OTP' });
-        }
+    if (record && record.otp === otp && record.expires > Date.now()) {
+      delete otpStore[email]; // OTP can only be used once
+      res.json({ success: true, message: "OTP verified successfully" });
+    } else {
+      res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired OTP" });
     }
-}
+  },
+  sendOTPEmail: async (req, res) => {
+    const { email } = req.body;
 
-module.exports = otpController
+    if (!email) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email is required" });
+    }
+
+    const otp = generateOTP();
+    otpStore[email] = { otp, expires: Date.now() + 300000 }; // OTP expires in 5 min
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Your OTP Code",
+      text: `Your OTP code is: ${otp}. It will expire in 5 minutes.`,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      res.json({ success: true, message: "OTP sent successfully" });
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      res.status(500).json({ success: false, message: "Failed to send OTP" });
+    }
+  },
+};
+
+module.exports = otpController;
