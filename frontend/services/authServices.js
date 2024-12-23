@@ -52,14 +52,12 @@ export const authService = {
   },
 
   updateUser: async (userId, userData) => {
-    try{
-        const response = await axios.post(`${DEVICE_IP}:3000/db/user/updateUser/${userId}`, {userData});
+    try {
+        const response = await axios.post(`${DEVICE_IP}:3000/db/user/updateUser/${userId}`, userData);
         return response.data;
-
-
-    }catch(error){
-      console.log('Error in updateUser service:', error.response?.data || error.message);
-      throw error.response?.data || { message: 'An error occurred while update user details' };
+    } catch(error) {
+        console.log('Error in updateUser service:', error.response?.data || error.message);
+        throw error.response?.data || { message: 'An error occurred while update user details' };
     }
   }
 

@@ -161,43 +161,47 @@ const userController = {
     },
 
     updateUser: async (req, res) => {
-
         console.log("Updating user...");
-   
-        const { userId } = req.params; // Get userId from URL parameters
+        const { userId } = req.params;
         const { programmecode, email, password, profile_picture } = req.body;
-   
+    
         try {
-            // If password is provide, hash it
-            let hashedPassword = undefined;
+            // If password is provided, hash it
+            let hashedPassword;
             if (password) {
                 const saltRounds = 10;
                 hashedPassword = await bcrypt.hash(password, saltRounds);
             }
-   
-            //then save to db
+    
+            // Use parameterized queries to prevent SQL injection
             if (password) {
                 const updateCredentialsQuery = `
                     UPDATE user_credentials
-                    SET password = ${hashedPassword}
-                    WHERE user_id = ${userId}`;
-                await req.sql(updateCredentialsQuery);
+                    SET password = ?
+                    WHERE user_id = ?`;
+                await req.sql(updateCredentialsQuery, [hashedPassword, userId]);
             }
-   
+    
             const updateProfileQuery = `
                 UPDATE user_profile
-                SET programmecode = ${programmecode ? programmecode : 'programmecode'},
-                    email = ${email ? email : 'email'},
-                    profile_picture = ${profile_picture ? profile_picture : 'profile_picture'}
-                WHERE user_id = ${userId}`;
-            await req.sql(updateProfileQuery);
-   
-            // Respond with a success message
-            res.status(200).json({ message: 'User updated successfully' });
-   
+                SET 
+                    programmecode = COALESCE(?, programmecode),
+                    email = COALESCE(?, email),
+                    profile_picture = COALESCE(?, profile_picture)
+                WHERE user_id = ?`;
+            
+            await req.sql(updateProfileQuery, [
+                programmecode || null,
+                email || null,
+                profile_picture || null,
+                userId
+            ]);
+    
+            res.status(200).json({ success: true, message: 'User updated successfully' });
+    
         } catch (error) {
             console.error('Error during user update:', error);
-            res.status(500).json({ message: 'Server error', error: error.message });
+            res.status(500).json({ success: false, message: 'Server error', error: error.message });
         }
     }
 

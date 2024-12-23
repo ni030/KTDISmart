@@ -41,34 +41,25 @@ const EditProfile = () => {
 
   const handleSave = async () => {
     try {
-      const updatedUserData = {
-        programmecode: programmeCode,
-        email,
-        password, // Optional password update
-        profile_picture: profilePicture,
-      };
+        // Only include fields that have values
+        const updatedUserData = {
+            ...(programmeCode && { programmecode: programmeCode }),
+            ...(email && { email }),
+            ...(password && { password }),
+            ...(profilePicture && { profile_picture: profilePicture })
+        };
 
-      // Call the backend to update the user data
-      const response = await authService.updateUser(user.id, updatedUserData);
+        const response = await authService.updateUser(user.id, updatedUserData);
 
-      if (response.success) {
-        Alert.alert('Success', 'Profile updated successfully.');
-        navigation.goBack(); // Navigate back to the previous screen
-      } else {
-        Alert.alert('Error', 'Failed to update profile. Please try again.');
-      }
+        if (response.success) {
+            Alert.alert('Success', 'Profile updated successfully.');
+            navigation.goBack();
+        } else {
+            Alert.alert('Error', response.message || 'Failed to update profile. Please try again.');
+        }
     } catch (error) {
-      console.error('Save error:', error);
-      Alert.alert('Error', 'Failed to save profile. Please try again!!!');
-    }
-  };
-
-  const handleConfirmPasswordChange = (value) => {
-    setConfirmPassword(value);
-    if (value !== password) {
-      setPasswordError('Passwords do not match');
-    } else {
-      setPasswordError('');
+        console.error('Save error:', error);
+        Alert.alert('Error', 'Failed to save profile. Please try again.');
     }
   };
 
