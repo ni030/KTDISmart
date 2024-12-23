@@ -16,22 +16,22 @@ const ResetPassword = () => {
       setErrorMessage('Passwords do not match');
       return;
     }
-
+  
     try {
-      // const response = await passwordService.resetPassword({ email, newPassword });
-      // if (response?.status === 'success') {
-      //   Alert.alert('Success', response.message);
-      //   navigation.navigate('login');
-      // } else {
-      //   setErrorMessage(response?.message || 'Failed to reset password');
-      // }
-      if (newPassword == confirmPassword)
-      Alert.alert('Success', 'Password reset successful!');
-      navigation.navigate('login');
+      const response = await passwordService.resetPassword({ email, newPassword });
+  
+      if (response?.success) {
+        Alert.alert('Success', response.message || 'Password reset successful!');
+        navigation.navigate('login');  // Redirect to login screen after successful reset
+      } else {
+        setErrorMessage(response?.message || 'Failed to reset password');
+      }
     } catch (error) {
+      console.error("Reset password error:", error);
       setErrorMessage(error.message || 'An error occurred. Please try again.');
     }
   };
+  
 
   return (
     <ImageBackground
