@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, A
 import { useNavigation, useRoute } from '@react-navigation/native';
 import otpService from '../../services/otpService';
 import passwordService from './../../services/passwordService';
+import { OtpInput } from "react-native-otp-entry";
 
 const EnterOTP = () => {
   const navigation = useNavigation();
@@ -68,7 +69,7 @@ const EnterOTP = () => {
         <Text style={styles.subtitle}>
           A 4-digit code has been sent to your email or phone.
         </Text>
-        <TextInput
+        {/* <TextInput
           style={styles.otpInput}
           maxLength={4}
           keyboardType="number-pad"
@@ -76,6 +77,12 @@ const EnterOTP = () => {
           onChangeText={setOtp}
           placeholder="OTP"
           placeholderTextColor="#ccc"
+        /> */}
+        <OtpInput 
+          onTextChange={setOtp}
+          numberOfDigits={4}
+          containerStyle={styles.otpContainer}
+          inputStyle={styles.otpInput}
         />
         <TouchableOpacity
           style={styles.button}
@@ -145,6 +152,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  otpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  otpInput: {
+    width: 50,
+    height: 50,
+    margin: 5,
+    borderWidth: 1,
+    borderRadius: 12,
+    textAlign: 'center',
+    fontSize: 20,
+    backgroundColor: 'white',
+    color: 'black',
   },
 });
 

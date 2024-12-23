@@ -57,14 +57,24 @@ const passwordController = {
 
       if (updateQuery.length === 0) {
         console.error("No rows updated. Ensure email matches.");
-        return res.status(400).json({ message: "Failed to update password" });
+        return res
+          .status(400)
+          .json({ message: "Failed to update password", success: false });
       }
 
       console.log("Password updated successfully.");
-      res.status(200).json({ message: "Password reset successful" });
+      res
+        .status(200)
+        .json({ message: "Password reset successful", success: true });
     } catch (error) {
       console.error("Error during password reset:", error);
-      res.status(500).json({ message: "Server error", error: error.message });
+      res
+        .status(500)
+        .json({
+          message: "Server error",
+          error: error.message,
+          success: false,
+        });
     }
   },
 };
