@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import passwordService from './../../services/passwordService'; // Ensure this service is correctly implemented
-import { sendOtpEmail} from '../../services/resetPasswordService';
 import otpService from '../../services/otpService';
 
 const ForgotPassword = () => {

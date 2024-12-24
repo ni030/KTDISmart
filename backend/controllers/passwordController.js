@@ -18,6 +18,7 @@ const passwordController = {
       res.status(500).json({ message: "Server error", error: error.message });
     }
   },
+  
   resetPassword: async (req, res) => {
     console.log("Resetting password...");
 
