@@ -51,7 +51,7 @@ const DecodeQR = ({userId}) => {
   };
 
   return (
-    <SafeAreaView className="w-1/2 mx-auto pb-8">
+    <SafeAreaView className="w-1/2 mx-auto pb-8 bottom-12">
       <Button textColor='white' buttonColor='rgba(0,0,0,0.5)' icon="image" onPress={pickImage} className="p-1"> Scan from photo</Button>
     </SafeAreaView>
   );

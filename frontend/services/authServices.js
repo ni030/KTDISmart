@@ -40,6 +40,7 @@ export const authService = {
       throw error.response?.data || { message: 'An error occurred while checking user existence' };
     }
   },
+
   getUserById: async (userId) => {
     try {
       const response = await axios.post(`${DEVICE_IP}:3000/db/user/getUserById`, {userId: userId});
@@ -48,7 +49,19 @@ export const authService = {
       console.log('Error in getUserById service:', error.response?.data || error.message);
       throw error.response?.data || { message: 'An error occurred while fetching user details' };
     }
+  },
+
+  updateUser: async (data) => {
+    console.log("update the User -> " + JSON.stringify(data)); //checked
+    try {
+        const response = await axios.post(`${DEVICE_IP}:3000/db/user/updateUser`, data);
+        return response.data;
+    } catch(error) {
+        console.log('Error in updateUser service:', error.response?.data || error.message);
+        return { success: false, message: "Failed to update user profile" };
+    }
   }
+
 };
 
 export default authService;

@@ -1,41 +1,44 @@
-import axios from 'axios';
-import { DEVICE_IP } from '@env';
+import axios from "axios";
+import { DEVICE_IP } from "@env";
 
 export const passwordService = {
-    checkEmailExistence: async (data) => {
-        console.log("Checking email existence...", data);
-        try {
-            const response = await axios.post(`${DEVICE_IP}:3000/db/password/checkEmailExistence`, {data});
-            console.log("res in service", response.data);
-        } catch (error) {
-            console.error('Error in checkEmailExistence in service:', error);
-        }
-    },
+  checkEmailExistence: async (data) => {
+    console.log("checkEmailExistence -> " + JSON.stringify(data));
+    try {
+      const response = await axios.post(
+        `${DEVICE_IP}:3000/db/password/checkEmailExistence`,
+        data
+      );
+      console.log("res in service", response.data.exists);
+      return response.data;
+    } catch (error) {
+      console.error("Error in checkEmailExistence in service:", error);
+    }
+  },
 
-    sendOTP: async (data) => {
-        try {
-            const response = await axios.post(`${DEVICE_IP}:3000/db/password/sendOTP`, data);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || { message: 'An error occurred while sending OTP' };
-        }
-    },
-    verifyOTP: async (data) => {
-        try {
-            const response = await axios.post(`${DEVICE_IP}:3000/db/password/verifyOTP`, data);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || { message: 'An error occurred while verifying OTP' };
-        }
-    },
-    resetPassword: async (data) => {
-        try {
-            const response = await axios.post(`${DEVICE_IP}:3000/db/password/resetPassword`, data);
-            return response.data;
-        } catch (error) {
-            throw error.response?.data || { message: 'An error occurred while resetting password' };
-        }
-    },
+  resetPassword: async (data) => {
+    console.log("resetPassword -> " + JSON.stringify(data));
+    try {
+      const response = await axios.post(`${DEVICE_IP}:3000/db/password/resetPassword`,data);
+      console.log("res in resetPassword service", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error in resetPassword service:", error);
+      return { success: false, message: "Failed to reset password" };
+    }
+  },
+
+  editPassword: async (data) => {
+    console.log("editPassword -> " + JSON.stringify(data));
+    try {
+      const response = await axios.post(`${DEVICE_IP}:3000/db/password/editPassword`,data);
+      console.log("res in editPassword service", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error in editPassword service:", error);
+      return { success: false, message: "Failed to edit password" };
+    }
+  },
 };
 
 export default passwordService;

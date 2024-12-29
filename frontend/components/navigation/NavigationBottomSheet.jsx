@@ -1,13 +1,15 @@
-import React, { useCallback, useMemo, useRef, useState } from "react"
-import { Image, StyleSheet, TouchableOpacity, View, Text, Keyboard } from "react-native";
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react"
+import { FlatList, Image, StyleSheet, TouchableOpacity, View, Text, Keyboard } from "react-native";
 import BottomSheet, {BottomSheetView} from "@gorhom/bottom-sheet";
 import GoogleTextInput from "./GoogleTextInput";
 import { useLocationStore } from "../../store";
 import { saveSearchLocation } from "../../services/manageLocation";
 import { getRubbishBin, getShop, getWaterDispenser } from "../../services/manageAmenity";
+import { fetchRecentSearch } from "../../services/manageRecentSearch";
 
 
 const NavigationBottomSheet = ({
+    userId,
     mapRef,
     userLatitude,
     userLongitude,
@@ -16,8 +18,55 @@ const NavigationBottomSheet = ({
     setShowRubbishBins, 
     setShowShops,
     setDestination,
+    handleMarkMyLocation,
+    handleShareLocation
 }) => {
-    const snapPoints = useMemo(()=>['14%','50%','92%']);
+    //Sprint 3
+    const [recentSearches, setRecentSearches] =useState([]);
+    const [error, setError] = useState(null);
+
+    const updateRecentSearches = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const result = await fetchRecentSearch(userId);
+            console.log('Fetched recent searches:', result);
+            if (result && result.locations) {
+                setRecentSearches(result.locations); // Store the array directly
+            } else {
+                setRecentSearches([]);
+            }
+        } catch (err) {
+            console.error('Error fetching recent searches:', err);
+            setError('Failed to fetch recent searches. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (userId) {
+            updateRecentSearches();
+        }
+    }, [userId]);
+
+    const markMyLocation = () => {
+        if (userLatitude && userLongitude) {
+            // Center the map on the user's location
+            mapRef.current.animateCamera({
+                center: { latitude: userLatitude, longitude: userLongitude },
+                zoom: 17, // Adjust zoom level as needed
+            });
+    
+            // Update the bottom sheet state or any relevant data
+            bottomSheetRef.current.snapToIndex(0); // Optional: Snap the bottom sheet to index 0
+        } else {
+            console.warn("User location is not available");
+        }
+    };
+
+    //
+    const snapPoints = useMemo(()=>['22.5%','50.5%','92%']);
     const bottomSheetRef = useRef(null);
     const handleSheetChanges = useCallback((index) => {
         if(index!==2){
@@ -26,6 +75,59 @@ const NavigationBottomSheet = ({
     },[]);
     const { setDestinationLocation } = useLocationStore();
 
+    const [loading, setLoading] = useState(true);
+  
+    // Function to fetch and set data
+    const loadRecentSearches = async () => {
+      try {
+        const data = await fetchRecentSearch(userId);
+        if (data) {
+          setRecentSearches(data); // Update state with recent searches
+        } else {
+          setRecentSearches([]); // Set empty if no data
+        }
+      } catch (error) {
+        console.error("Error fetching recent searches:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    // Trigger fetch when bottom sheet opens
+    useEffect(() => {
+        if (userId) {
+            updateRecentSearches();
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        console.log('State updated:', recentSearches);
+    }, [recentSearches]);
+
+    console.log(recentSearches[0])
+    console.log(recentSearches[1])
+    console.log(recentSearches[2])
+
+    const renderItem = ({ item, index }) => {
+        return (
+            <View>
+                <TouchableOpacity
+                    style={styles.recentItem}
+                    onPress={() => {
+                        moveToLocation(item.latitude,item.longitude)
+                        bottomSheetRef.current.snapToIndex(0);
+                    }
+                }
+                >
+                    <Text style={styles.addressText}>{item.address}</Text>
+                </TouchableOpacity>
+
+                {/* Only add the line divider between items */}
+                {index < recentSearches.length - 1 && <View style={styles.divider} />}
+            </View>
+        );
+    };
+  
     async function moveToLocation(latitude,longitude){
         let latitudeDelta;
         let longitudeDelta;
@@ -55,14 +157,15 @@ const NavigationBottomSheet = ({
             longitudeDelta,
         },2000);
     }
-    const matric = 'A22EC0002';
     const handleDestinationPress=({latitude,longitude,address})=>{
         setDestinationLocation(latitude,longitude,address);
         moveToLocation(latitude,longitude)
+        console.log(userId)
         console.log(latitude)
         console.log(longitude)
         console.log(address)
-        saveSearchLocation(matric,latitude,longitude,address)
+        saveSearchLocation(userId,latitude,longitude,address)
+        updateRecentSearches()
     };
     const [activeIcons, setActiveIcons] = useState({
         waterDispenser: false,
@@ -112,6 +215,7 @@ const NavigationBottomSheet = ({
             console.log("No locations found")
         }
     }
+
     
 
     const styles = StyleSheet.create({
@@ -120,7 +224,7 @@ const NavigationBottomSheet = ({
             marginTop: 3,
         },
         handle: {
-            backgroundColor: '#f7dae5', // Change to your desired color
+            backgroundColor: '#ffedf1', // Change to your desired color
             height: 25, // Adjust height as needed
             borderTopLeftRadius: 20,
             borderTopRightRadius: 20,
@@ -142,7 +246,7 @@ const NavigationBottomSheet = ({
             flex: 1,
             zIndex:3,
             alignItems: 'center',
-            backgroundColor:'#f7dae5', //ok
+            backgroundColor:'#ffedf1', //ok
             color:'#f7dae5'
         },
         title:{
@@ -154,7 +258,7 @@ const NavigationBottomSheet = ({
             fontSize:15
         },
         appName:{
-            marginTop: 13,
+            marginTop: 5,
             marginBottom:10,
         },
         label:{
@@ -163,10 +267,10 @@ const NavigationBottomSheet = ({
         },
         favouriteContainer: {
             width: "90%",
-            backgroundColor: '#a1335d',
+            backgroundColor: '#BD708D',
             borderRadius: 20,
             alignItems: "center",  // Centering the content horizontally
-            marginTop: 10,
+            // marginTop: 10,
             paddingHorizontal: 10,
             paddingVertical: 20,
         }, 
@@ -185,15 +289,16 @@ const NavigationBottomSheet = ({
             height:100
         },
         iconImage: {
-            width: 70,
-            height: 70,
+            width: 60,
+            height: 60,
             resizeMode: "contain",
         },
         activeIcon: {
             // borderWidth: 1,
             borderColor: "white", // Example highlight color
-            borderRadius: 20, // Adjust for rounded icon
+            borderRadius: 40, // Adjust for rounded icon
             backgroundColor: "rgba(0, 0, 0, 0.3)",
+            color: "rgba(0, 0, 0, 0.3)",
         },
         iconTitle: {
             fontSize: 14,
@@ -204,15 +309,46 @@ const NavigationBottomSheet = ({
             marginTop: 10, // Space between icon and title
         },
         recentsContainer: {
-            // flex:3,
-            // marginLeft: 22,
             alignContent:'center',
             justifyContent:'center',
             width:"90%",
-            height: 160,           
+            height: 140,           
             backgroundColor:'#a1335d',
             borderRadius:20,
             marginBottom:15
+        },
+        recentItem: {
+            backgroundColor: '#a1335d',
+            padding: 9,
+            borderRadius: 8,
+            marginLeft: 15,
+            marginRight: 15,
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            // marginTop: 3,
+            // marginBottom:3
+        },
+        divider: {
+            marginLeft: 15,
+            marginRight: 15,
+            borderBottomWidth: 1, // Add a line divider between items
+            borderBottomColor: '#ccc', // Set the color of the line
+        },
+        addressText: {
+            fontSize: 14,
+            fontWeight: 'bold',
+            color: 'white',
+        },
+        recentsContainerEmpty:{
+            alignItems:'center',
+            justifyContent:'center',
+            flex:1
+        },
+        recentImage:{
+            width: 80,
+            height: 80,
+            resizeMode: "contain",
+            alignContent:'center'
         },
         functionContainer:{
             alignContent:'center',
@@ -223,7 +359,13 @@ const NavigationBottomSheet = ({
             marginTop:10,
             marginBottom:10,
             height:50
-        }
+        },
+        buttonText: {
+            color: '#FFFFFF',
+            fontSize: 13,
+            fontWeight: 'bold',
+            textAlign:'center'
+        },
     });
 
     return(
@@ -260,7 +402,7 @@ const NavigationBottomSheet = ({
                             <View style={styles.iconColumn}>
                             <TouchableOpacity onPress={() => handleIconPress('waterDispenser')}>
                                 <Image
-                                source={require("../../assets/search.png")}
+                                source={require("../../assets/waterDispenser.png")}
                                 style={[styles.iconImage,activeIcons.waterDispenser && styles.activeIcon]}
                                 />
                             </TouchableOpacity>
@@ -269,7 +411,7 @@ const NavigationBottomSheet = ({
                             <View style={styles.iconColumn}>
                             <TouchableOpacity onPress={() => handleIconPress('rubbishBin')}>
                                 <Image
-                                source={require("../../assets/search.png")}
+                                source={require("../../assets/rubbishBin.png")}
                                 style={[styles.iconImage,activeIcons.rubbishBin && styles.activeIcon]}
                                 />
                             </TouchableOpacity>
@@ -278,7 +420,7 @@ const NavigationBottomSheet = ({
                             <View style={styles.iconColumn}>
                             <TouchableOpacity onPress={() => handleIconPress('shop')}>
                                 <Image
-                                source={require("../../assets/search.png")}
+                                source={require("../../assets/shop.png")}
                                 style={[styles.iconImage, activeIcons.shop && styles.activeIcon]}
                                 />
                             </TouchableOpacity>
@@ -290,14 +432,47 @@ const NavigationBottomSheet = ({
                         <Text style={styles.title}>Recents</Text>
                     </View>
                     <View style={styles.recentsContainer}>
-                        <Text></Text>
+                        {recentSearches.length > 0 ? (
+                        <View>
+                        <FlatList
+                            data={recentSearches}
+                            keyExtractor={(item, index) => index.toString()}
+                             // Items displayed in a row
+                            showsHorizontalScrollIndicator={false}
+                            renderItem={renderItem}
+                        />
+                        </View>
+                        ) : (
+                            <View style={styles.recentsContainerEmpty}>
+                                <Image
+                                    source={require("../../assets/shop.png")}
+                                    style={styles.recentImage}
+                                />
+                                <Text style={{ color: "white", marginTop: 10, fontWeight: "500" }}>No recent searches</Text>
+                            </View>
+                        )}
                     </View>
                     <View style={styles.functionContainer}>
-                        <Text className="text-center" style={{ color: "white", fontWeight:600 }}>Mark My Location</Text>
+                        <TouchableOpacity
+                            style={styles.markLocationButton}
+                            onPress={() => {
+                                handleMarkMyLocation();
+                                bottomSheetRef.current.snapToIndex(0)
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Mark My Location</Text>
+                        </TouchableOpacity>
                     </View>
 
                     <View style={styles.functionContainer}>
-                        <Text className="text-center" style={{ color: "white", fontWeight:600}}>Share My Location</Text>
+                    <TouchableOpacity
+                            style={styles.markLocationButton}
+                            onPress={() => {
+                                handleShareLocation();
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Share My Location</Text>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.appName}>
                         <Text style={{color:"#a1335d",fontWeight:400}}>KTDI Smart</Text>

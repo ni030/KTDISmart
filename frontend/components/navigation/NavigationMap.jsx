@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
-import { Text, TouchableOpacity, StyleSheet, View, Modal } from "react-native";
+import { Share, Text, TouchableOpacity, StyleSheet, View, Modal } from "react-native";
 import MapView, { PROVIDER_DEFAULT, Marker } from 'react-native-maps';
 import { useLocationStore } from "../../store";
 import { calculateRegion } from "../../lib/map";
 import NavigationBottomSheet from "./NavigationBottomSheet";
 import MapViewDirections from "react-native-maps-directions";
 
-const NavigationMap = () => {
+const NavigationMap = ({userId}) => {
     const googlePlacesApiKey = process.env.EXPO_PUBLIC_GOOGLE_API_KEY
     const mapRef = useRef(null);
     const [modalVisible, setModalVisible] = useState(false);
@@ -14,6 +14,8 @@ const NavigationMap = () => {
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [navigating, setNavigating] = useState(false); // Track navigation state
     const [showTerminatePrompt, setShowTerminatePrompt] = useState(false);
+    const [showUserMarker, setShowUserMarker] = useState(false);
+    const [isMarkerVisible, setIsMarkerVisible] = useState(false);
 
     const {
         userLongitude, userLatitude, userAddress, destinationLatitude, destinationLongitude, destinationAddress
@@ -103,6 +105,34 @@ const NavigationMap = () => {
         },
     });
 
+    const handleMarkMyLocation = () => {
+        setIsMarkerVisible((prevState) => !prevState);
+        setShowUserMarker((prevState) => !prevState);
+        if (mapRef.current) {
+            mapRef.current.animateToRegion({
+                latitude: userLatitude,
+                longitude: userLongitude,
+                latitudeDelta: 0.0015,
+                longitudeDelta: 0.0015,
+            });
+        }
+    };
+
+    const handleShareLocation = async () => {
+        if (userLatitude && userLongitude) {
+            const locationUrl = `https://www.google.com/maps?q=${userLatitude},${userLongitude}`;
+            try {
+                await Share.share({
+                    message: `Here's my current location: ${locationUrl}`,
+                });
+            } catch (error) {
+                console.error("Error sharing location: ", error);
+            }
+        } else {
+            console.warn("User location not available.");
+        }
+    }
+
     // Function to handle marker press and show custom modal
     const handleMarkerPress = (loc) => {
         setSelectedLocation(loc);
@@ -153,6 +183,7 @@ const NavigationMap = () => {
 
     return (
         <View style={styles.container}>
+            
             <MapView
                 ref={mapRef}
                 regionRef={regionRef}
@@ -168,6 +199,19 @@ const NavigationMap = () => {
                 pitchEnabled={true}
                 rotateEnabled={true}
             >
+                {/* Marker for User's Current Location */}
+                {showUserMarker && (
+                    <Marker
+                        coordinate={{
+                            latitude: userLatitude,
+                            longitude: userLongitude,
+                        }}
+                        title="My Location"
+                        description="This is my current location"
+                    />
+                )}
+                {/* MapViewDirections and other markers */}
+
                 {/* Conditionally render markers based on the toggled states */}
                 {showWaterDispensers && locations.filter(loc => loc.id === 'WD').map((loc, index) => (
                     <Marker
@@ -206,10 +250,10 @@ const NavigationMap = () => {
                     onReady={(result) => {
                         mapRef.current.fitToCoordinates(result.coordinates, {
                             edgePadding: {
-                                right: 20,
-                                bottom: 20,
-                                left: 20,
-                                top: 20,
+                                right: 30,
+                                bottom: 30,
+                                left: 30,
+                                top: 30,
                             },
                         });
                     }}
@@ -242,7 +286,7 @@ const NavigationMap = () => {
                     style={styles.terminateButton}
                     onPress={handleTerminateRouting}
                 >
-                    <Text style={styles.terminateButtonText}>Terminate</Text>
+                    <Text style={styles.terminateButtonText}>Terminate Routing</Text>
                 </TouchableOpacity>
             )}
 
@@ -275,6 +319,7 @@ const NavigationMap = () => {
             )}
 
             <NavigationBottomSheet
+                userId={userId}
                 mapRef={mapRef}
                 userLatitude={userLatitude}
                 userLongitude={userLongitude}
@@ -282,6 +327,8 @@ const NavigationMap = () => {
                 setShowWaterDispensers={setShowWaterDispensers}
                 setShowRubbishBins={setShowRubbishBins}
                 setShowShops={setShowShops}
+                handleMarkMyLocation={handleMarkMyLocation}
+                handleShareLocation={handleShareLocation}
             />
         </View>
     );

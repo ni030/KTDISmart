@@ -2,7 +2,7 @@ import axios from 'axios';
 import { DEVICE_IP } from '@env'
 
 export const getWaterDispenser = async () => {
-    // console.log("ip: ", DEVICE_IP)
+    console.log("ip: ", DEVICE_IP)
     console.log("Fetching water dispenser");
     try{
         const response = await axios.get(`${DEVICE_IP}:3000/db/amenity/fetch/water_dispenser`);

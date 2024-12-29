@@ -10,7 +10,7 @@ const userController = {
     register: async (req, res) => {
         console.log("Registering user...");
     
-        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture } = req.body;
+        const { username, email, password, phonenum, name, matricno, gender, programmecode, profilePicture, block, roomNumber, keyNumber } = req.body;
     
         try {
             // Check if the user already exists in the database
@@ -40,10 +40,10 @@ const userController = {
             // Generate a UUID for profile_id
             const profileId = uuidv4();
     
-            // Insert into user_profile with profile picture URL
+            // Insert into user_profile
             const profileResponse = await req.sql`
-                INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture)
-                VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture})`;
+            INSERT INTO user_profile (profile_id, user_id, phonenum, name, matricno, gender, programmecode, profile_picture, block, roomnumber, keynumber)
+            VALUES (${profileId}, ${userId}, ${phonenum}, ${name}, ${matricno}, ${gender}, ${programmecode}, ${profilePicture}, ${block}, ${roomNumber}, ${keyNumber})`;
     
             // Respond with a success message
             res.status(201).json({ message: 'User registered successfully' });
@@ -51,7 +51,7 @@ const userController = {
             console.error('Error during user registration:', error);
             res.status(500).json({ message: 'Server error', error: error.message });
         }
-    },    
+    },
 
     // LOGIN ----------------------------------------------------------------
     login: async (req, res) => {
@@ -84,6 +84,7 @@ const userController = {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     },
+    //check user exist
     checkIsUserExist: async (req, res) => {
         const METHOD = "CheckIsUserExist Controller";
         console.log(`${METHOD} | start`);
@@ -120,6 +121,7 @@ const userController = {
             res.status(500).json({ message: 'Server error', error: error.message });
         }
     },
+    
     getUserById: async (req, res) => {
         const METHOD = "GetUserById Controller";
         console.log(`${METHOD} | start`);
@@ -138,7 +140,10 @@ const userController = {
                     up.matricno,
                     up.gender,
                     up.programmecode,
-                    up.profile_picture
+                    up.profile_picture,
+                    up.block,
+                    up.roomnumber,
+                    up.keynumber
                 FROM user_credentials uc
                 INNER JOIN user_profile up ON uc.user_id = up.user_id
                 WHERE uc.user_id = ${userId}`;
@@ -153,7 +158,70 @@ const userController = {
             console.error(`${METHOD} | Error during fetch:`, error);
             res.status(500).json({ message: 'Server error', error: error.message });
         }
+    },
+
+    updateUser: async (req, res) => {
+
+        const {username, programmeCode, email, phoneNumber, profilePicture} = req.body;
+        console.log("Updating user....", {username, programmeCode, email, phoneNumber, profilePicture});
+
+       try {
+
+        // Check if user exists
+        const user = await req.sql`SELECT * FROM user_credentials WHERE username = ${username}`;
+
+        if (user.length === 0) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        
+        // Update email in userCredential
+        const update1 = await req.sql`
+        UPDATE user_credentials 
+        SET email = ${email} 
+        WHERE user_id = ${user[0].user_id}
+        RETURNING *`; // Return the updated row
+
+        console.log("update1 -> " + JSON.stringify(update1));
+
+        //Update programmecode, phoneno, profile pic
+        const update2 = await req.sql`
+        UPDATE user_profile 
+        SET phonenum = ${phoneNumber}, programmecode= ${programmeCode}, profile_picture= ${profilePicture}
+        WHERE user_id = ${user[0].user_id}
+        RETURNING *`; // Return the updated row
+
+        console.log("update2 -> " + JSON.stringify(update2));
+
+        if (update1.length === 0) {
+            console.error("No rows updated. Ensure email matches.");
+            return res
+              .status(400)
+              .json({ message: "Failed to update email", success: false });
+        }
+
+        if (update2.length === 0) {
+            console.error("No rows updated. Ensure data matches.");
+            return res
+              .status(400)
+              .json({ message: "Failed to update data", success: false });
+        }
+        console.log("Data updated successfully.");
+      res
+        .status(200)
+        .json({ message: "Data reset successful", success: true });
+    } catch (error) {
+      console.error("Error during data reset:", error);
+      res
+        .status(500)
+        .json({
+          message: "Server error",
+          error: error.message,
+          success: false,
+        });
+       }  
     }
+
 };
 
 module.exports = userController;
