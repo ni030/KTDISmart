@@ -45,16 +45,14 @@ const EnterOTP = () => {
             const otpResponse = await otpService.sendOTP(email);
   
             if (otpResponse?.success) {
-              // Show success message
               Alert.alert('Success', otpResponse.message || 'OTP has been sent to your email.');
             } else {
-              // If sending OTP failed
               Alert.alert('Unsuccessful', otpResponse.message || 'Failed to send OTP. Please try again.');
             }
           }
           
       } catch (error) {
-          console.error('Error in handleSubmit:', error); // Log the error
+          console.error('Error in handleSubmit:', error);
       }
     };
 
@@ -69,21 +67,14 @@ const EnterOTP = () => {
         <Text style={styles.subtitle}>
           A 4-digit code has been sent to your email or phone.
         </Text>
-        {/* <TextInput
-          style={styles.otpInput}
-          maxLength={4}
-          keyboardType="number-pad"
-          value={otp}
-          onChangeText={setOtp}
-          placeholder="OTP"
-          placeholderTextColor="#ccc"
-        /> */}
-        <OtpInput 
-          onTextChange={setOtp}
-          numberOfDigits={4}
-          containerStyle={styles.otpContainer}
-          inputStyle={styles.otpInput}
-        />
+        <View style={styles.otpWrapper}>
+          <OtpInput 
+            onTextChange={setOtp}
+            numberOfDigits={4}
+            containerStyle={styles.otpContainer}
+            inputStyle={styles.otpInput}
+          />
+        </View>
         <TouchableOpacity
           style={styles.button}
           onPress={()=>handleSubmit()}
@@ -108,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding:20,
   },
   title: {
     fontSize: 32,
@@ -120,19 +111,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     color: 'black',
+    marginBottom: 30,
+  },
+  otpWrapper: {
+    width: '80%',
+    alignItems: 'center',
     marginBottom: 20,
   },
+  otpContainer: {
+    width: '80%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 5, // Reduces space between inputs
+  },
   otpInput: {
-    width: '50%',
-    height: 50,
+    width: 45,
+    height: 45,
+    margin: 2, // Reduced margin between boxes
     borderWidth: 1,
-    borderColor: '#ccc',
     borderRadius: 12,
     textAlign: 'center',
     fontSize: 20,
-    marginBottom: 20,
-    marginTop: 15,
-    paddingHorizontal: 10,
+    backgroundColor: 'white',
     color: 'black',
   },
   resendText: {
@@ -152,23 +153,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  otpInput: {
-    width: 50,
-    height: 50,
-    margin: 5,
-    borderWidth: 1,
-    borderRadius: 12,
-    textAlign: 'center',
-    fontSize: 20,
-    backgroundColor: 'white',
-    color: 'black',
   },
 });
 

@@ -104,7 +104,6 @@ const EditProfile = () => {
   };
 
   const handleTempoSave = async () => {
-    
     if (!programmeCode) {
       Alert.alert('Error', 'Programme code cannot be empty');
       return;
@@ -125,7 +124,7 @@ const EditProfile = () => {
       });
 
       if (response.success) {
-        navigation.navigate('editPassword',{email});
+        navigation.navigate('editPassword', { email });
       } else {
         Alert.alert('Error', 'Failed to update profile. Please try again.');
       }
@@ -138,7 +137,7 @@ const EditProfile = () => {
   const handleResetPassword = async () => {
     // First, attempt to save the user's profile data
     const saveResponse = await handleTempoSave();
-  
+
     // If saving the data was successful, navigate to the ResetPassword page
     if (saveResponse) {
       navigation.navigate('editPassword', { email }); // Navigate to ResetPassword page with email as parameter
@@ -173,6 +172,16 @@ const EditProfile = () => {
         </View>
 
         <View style={styles.form}>
+          {/* Reset Password Button */}
+          <View style={styles.resetPasswordButtonContainer}>
+            <TouchableOpacity style={styles.resetPasswordButton} onPress={handleResetPassword}>
+              <Text style={styles.resetPasswordButtonText}>
+                Edit Password
+              </Text>
+              <FontAwesome name="arrow-right" size={20} color="#fff" style={styles.arrowIcon} />
+            </TouchableOpacity>
+          </View>
+
           <Text style={styles.label}>Programme Code</Text>
           <TextInput
             style={styles.input}
@@ -222,19 +231,11 @@ const EditProfile = () => {
           {phoneNumberError ? <Text style={styles.errorText}>{phoneNumberError}</Text> : null}
         </View>
 
-        {/* Reset Password Button */}
-        <View style={styles.resetPasswordButtonContainer}>
-          <TouchableOpacity style={styles.saveButton} onPress={handleResetPassword}>
-            <Text style={styles.saveButtonText}>Reset Password</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.saveButtonContainer}>
           <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.saveButtonText}>Save Changes</Text>
           </TouchableOpacity>
         </View>
-
       </View>
     </ImageBackground>
   );
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
     color: '#A1335D',
   },
   form: {
-    marginTop: 18,
+    marginTop: 15,
     marginLeft: 30,
     marginRight: 30,
   },
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     color: '#343a40',
     fontWeight: '500',
     marginBottom: 5,
-    marginTop: 5,
+    marginTop: 12,
   },
   errorText: {
     color: 'red',
@@ -305,7 +306,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   saveButtonContainer: {
-    marginTop: 30,
+    marginTop: 50,
     alignItems: 'center',
   },
   saveButton: {
@@ -321,8 +322,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   resetPasswordButtonContainer: {
-    marginTop: 15,
+    marginTop: 20,
     alignItems: 'center',
+  },
+  resetPasswordButton: {
+    borderColor: '#A1335D',
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 15,
+    height: 40,
+    backgroundColor: '#944a58',
+    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 15,
+  },
+  resetPasswordButtonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'left', // Align text to the left
+    flex: 1,
+  },
+  arrowIcon: {
+    marginLeft: 10,
   },
 });
 
