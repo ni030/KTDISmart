@@ -13,7 +13,7 @@ router.post('/checkIsUserExist', userController.checkIsUserExist);
 
 router.post('/getUserById', userController.getUserById);
 
-router.post('/updateUser/:userId', userController.updateUser);
+router.post('/updateUser', userController.updateUser);
 
 
 module.exports = router;

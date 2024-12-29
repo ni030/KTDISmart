@@ -14,6 +14,8 @@ export default function Layout() {
         <Stack.Screen name="Home" options={{ headerShown: false }} />
         <Stack.Screen name="profile" options={{ headerShown: false }} />
         <Stack.Screen name="editProfile" options={{ headerShown: false }} />
+        <Stack.Screen name="editPassword" options={{ headerShown: false }} />
+  
       </Stack>
       {/* Conditionally render the custom bottom navigation bar */}
       {showBottomNavBar && <BottomNavigationBar />}

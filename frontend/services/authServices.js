@@ -51,13 +51,14 @@ export const authService = {
     }
   },
 
-  updateUser: async (userId, userData) => {
+  updateUser: async (data) => {
+    console.log("update the User -> " + JSON.stringify(data)); //checked
     try {
-        const response = await axios.post(`${DEVICE_IP}:3000/db/user/updateUser/${userId}`, userData);
+        const response = await axios.post(`${DEVICE_IP}:3000/db/user/updateUser`, data);
         return response.data;
     } catch(error) {
         console.log('Error in updateUser service:', error.response?.data || error.message);
-        throw error.response?.data || { message: 'An error occurred while update user details' };
+        return { success: false, message: "Failed to update user profile" };
     }
   }
 

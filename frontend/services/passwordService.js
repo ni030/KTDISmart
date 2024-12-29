@@ -15,18 +15,28 @@ export const passwordService = {
       console.error("Error in checkEmailExistence in service:", error);
     }
   },
+
   resetPassword: async (data) => {
     console.log("resetPassword -> " + JSON.stringify(data));
     try {
-      const response = await axios.post(
-        `${DEVICE_IP}:3000/db/password/resetPassword`,
-        data
-      );
+      const response = await axios.post(`${DEVICE_IP}:3000/db/password/resetPassword`,data);
       console.log("res in resetPassword service", response.data);
       return response.data;
     } catch (error) {
       console.error("Error in resetPassword service:", error);
       return { success: false, message: "Failed to reset password" };
+    }
+  },
+
+  editPassword: async (data) => {
+    console.log("editPassword -> " + JSON.stringify(data));
+    try {
+      const response = await axios.post(`${DEVICE_IP}:3000/db/password/editPassword`,data);
+      console.log("res in editPassword service", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error in editPassword service:", error);
+      return { success: false, message: "Failed to edit password" };
     }
   },
 };

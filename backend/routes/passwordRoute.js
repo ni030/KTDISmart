@@ -3,6 +3,7 @@ const passwordController = require("../controllers/passwordController");
 const router = express.Router();
 
 router.post("/resetPassword", passwordController.resetPassword);
+router.post("/editPassword", passwordController.resetPassword);
 router.post("/checkEmailExistence", passwordController.checkEmailExistence);
 
 module.exports = router;
