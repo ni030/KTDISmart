@@ -21,15 +21,15 @@ const Progress = () => {
 
   // Determine the message to display
   const getStatusMessage = () => {
-    if (!complaint.estimated_time) {
+    if (complaint.status === 'cancelled') {
+      return `Your complaint is cancelled!`;
+    }else if (!complaint.estimated_time) {
       return 'Sorry, a constructor has not been assigned yet.';
     } else if (complaint.completed_time) {
       return 'Congratulations, your problem has been resolved!';
     } else if (complaint.status === 'expired') {
       const formattedDate = new Intl.DateTimeFormat('en-GB').format(new Date(complaint.estimated_time));
       return `Your complaint is expired! \nEstimated Construction Date: ${formattedDate}`;
-    } else if (complaint.status === 'cancelled') {
-      return `Your complaint is cancelled!`;
     } else {
       const formattedDate = new Intl.DateTimeFormat('en-GB').format(new Date(complaint.estimated_time));
       return `Estimated Construction Date: ${formattedDate}`;
@@ -78,8 +78,8 @@ const Progress = () => {
   // Handlers for Cancel and Resubmit buttons
   const handleCancel = () => {
     Alert.alert('Cancel Complaint', 'Are you sure you want to cancel this complaint?', [
-      { text: 'Yes', onPress: () => cancelComplaintTicket(complaint.complaintid) },
       { text: 'No', style: 'cancel' },
+      { text: 'Yes', onPress: () => cancelComplaintTicket(complaint.complaintid) },
     ]);
   };
 

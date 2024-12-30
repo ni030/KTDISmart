@@ -154,9 +154,9 @@ export default function Report() {
   };
 
     return (
-        <PaperProvider className="bg-primary-500">
-        <ScrollView className="flex-grow-1 mb-20 bg-primary-500">
-            <SafeAreaView className="pl-5 pr-5 w-screen flex-grow-1 bg-primary-500">
+        <PaperProvider>
+        <ScrollView className=" mb-16 bg-primary-500">
+            <SafeAreaView className="pl-5 pr-5 w-screen">
                 
                 {/* <Text className="text-2xl text-white font-bold">Personal Information</Text> */}
                     

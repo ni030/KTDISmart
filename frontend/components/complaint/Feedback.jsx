@@ -2,20 +2,25 @@ import React from 'react';
 import { PixelRatio, StyleSheet, Text, View, PanResponder, Animated, TouchableOpacity } from 'react-native';
 
 const REACTIONS = [
-  { label: "Worried", src: require('../../assets/complaint/worried.png'), bigSrc: require('../../assets/complaint/worried_big.png') },
-  { label: "Sad", src: require('../../assets/complaint/sad.png'), bigSrc: require('../../assets/complaint/sad_big.png') },
-  { label: "Strong", src: require('../../assets/complaint/ambitious.png'), bigSrc: require('../../assets/complaint/ambitious_big.png') },
-  { label: "Happy", src: require('../../assets/complaint/smile.png'), bigSrc: require('../../assets/complaint/smile_big.png') },
-  { label: "Surprised", src: require('../../assets/complaint/surprised.png'), bigSrc: require('../../assets/complaint/surprised_big.png') },
+  { label: "Worried", src: require('../../assets/complaint/worried.png'), bigSrc: require('../../assets/complaint/worried_big.png'), value: "worried" },
+  { label: "Sad", src: require('../../assets/complaint/sad.png'), bigSrc: require('../../assets/complaint/sad_big.png'), value: "sad" },
+  { label: "Strong", src: require('../../assets/complaint/ambitious.png'), bigSrc: require('../../assets/complaint/ambitious_big.png'), value: "strong" },
+  { label: "Happy", src: require('../../assets/complaint/smile.png'), bigSrc: require('../../assets/complaint/smile_big.png'), value: "happy" },
+  { label: "Surprised", src: require('../../assets/complaint/surprised.png'), bigSrc: require('../../assets/complaint/surprised_big.png'), value: "surprised" },
 ];
 const WIDTH = 320;
-const DISTANCE =  WIDTH / REACTIONS.length;
+const DISTANCE = WIDTH / REACTIONS.length;
 const END = WIDTH - DISTANCE;
 
 export default class Feedback extends React.Component {
   constructor(props) {
     super(props);
     this._pan = new Animated.Value(2 * DISTANCE);
+    
+    // Initialize with default "strong" reaction since slider starts in middle
+    if (this.props.onRateChange) {
+      this.props.onRateChange("strong");
+    }
   }
 
   UNSAFE_componentWillMount() {
@@ -44,11 +49,12 @@ export default class Feedback extends React.Component {
 
   updatePan(toValue) {
     Animated.spring(this._pan, { toValue, friction: 7, useNativeDriver: false }).start();
+    
     // Calculate which reaction is selected based on the position
     const selectedIndex = Math.round(toValue / DISTANCE);
     const selectedReaction = REACTIONS[selectedIndex];
     
-    // Call the onRateChange prop with the selected reaction's value
+    // Pass the string value of the selected reaction
     if (this.props.onRateChange) {
       this.props.onRateChange(selectedReaction.value);
     }
@@ -86,9 +92,12 @@ export default class Feedback extends React.Component {
                 colorOutputRange = ['#999', '#222'];
               }
 
-
               return (
-                <TouchableOpacity onPress={() => this.updatePan(u)} activeOpacity={0.9} key={idx}>
+                <TouchableOpacity 
+                  onPress={() => this.updatePan(u)} 
+                  activeOpacity={0.9} 
+                  key={idx}
+                >
                   <View style={styles.smileyWrap}>
                     <Animated.Image
                       source={reaction.src}
