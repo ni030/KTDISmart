@@ -51,7 +51,7 @@ const editPassword = () => {
             <FontAwesome name="arrow-left" size={24} color="#fff" />
       </TouchableOpacity>
 
-        <Text style={styles.title}>Reset Password</Text>
+        <Text style={styles.title}>Edit Password</Text>
         
         <View style={styles.inputContainer}>
           <TextInput
@@ -95,7 +95,7 @@ const editPassword = () => {
 
         {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
         <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
-          <Text style={styles.buttonText}>Reset</Text>
+          <Text style={styles.buttonText}>Confirm Edit Password</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
