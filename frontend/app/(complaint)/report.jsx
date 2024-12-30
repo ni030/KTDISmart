@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { TextInput, PaperProvider, Button } from 'react-native-paper';
-import { View, Text, TouchableOpacity, Image, ToastAndroid } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ToastAndroid, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-paper-dropdown';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import { ScrollView } from 'react-native-gesture-handler';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DeclareDialog from '../../components/complaint/declarateDialog';
 import ImageModal from '../../components/complaint/imageModal';
 import { createForm } from '../../services/manageComplaintForm';
@@ -27,7 +25,7 @@ export default function Report() {
 
     //temp data
     const [desc, setDesc] = React.useState(is_resubmit ? prev_complaint.description : '');
-    const [dorm, setDorm] = React.useState('MA6 210');
+    const [dorm, setDorm] = React.useState(`${userInfo.block} ${userInfo.roomnumber}`);
     const [type, setType] = React.useState(is_resubmit ? prev_complaint.defecttype : '');
     const [pic, setPic] = React.useState(is_resubmit ? prev_complaint.complaintimage : null);
     const [options, setOptions] = React.useState([]);
@@ -156,8 +154,7 @@ export default function Report() {
   };
 
     return (
-        <GestureHandlerRootView >
-        <PaperProvider >
+        <PaperProvider className="bg-primary-500">
         <ScrollView className="flex-grow-1 mb-20 bg-primary-500">
             <SafeAreaView className="pl-5 pr-5 w-screen flex-grow-1 bg-primary-500">
                 
@@ -252,6 +249,5 @@ export default function Report() {
             </SafeAreaView>
             </ScrollView>
         </PaperProvider>
-        </GestureHandlerRootView>
     );
 }
