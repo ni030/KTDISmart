@@ -267,7 +267,8 @@ const NavigationBottomSheet = ({
         },
         favouriteContainer: {
             width: "90%",
-            backgroundColor: '#BD708D',
+            // backgroundColor: '#BD708D',
+            backgroundColor: '#a1335d',
             borderRadius: 20,
             alignItems: "center",  // Centering the content horizontally
             // marginTop: 10,
@@ -327,6 +328,11 @@ const NavigationBottomSheet = ({
             justifyContent: 'center',
             // marginTop: 3,
             // marginBottom:3
+        },
+        noRecentImage: {
+            width: 90,
+            height: 90,
+            // resizeMode: "contain",
         },
         divider: {
             marginLeft: 15,
@@ -445,10 +451,10 @@ const NavigationBottomSheet = ({
                         ) : (
                             <View style={styles.recentsContainerEmpty}>
                                 <Image
-                                    source={require("../../assets/shop.png")}
-                                    style={styles.recentImage}
+                                    source={require("../../assets/no-result.png")}
+                                    style={styles.noRecentImage}
                                 />
-                                <Text style={{ color: "white", marginTop: 10, fontWeight: "500" }}>No recent searches</Text>
+                                <Text style={{ color: "white", fontWeight: "400" }}>No recent searches</Text>
                             </View>
                         )}
                     </View>
