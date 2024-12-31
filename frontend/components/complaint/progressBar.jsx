@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 
 const ProgressBar = ({ complaint }) => {
-    console.log(complaint.status);
 
     // Map statuses to step indexes
     const statusToStep = {

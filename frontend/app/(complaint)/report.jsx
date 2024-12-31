@@ -121,7 +121,6 @@ export default function Report() {
 
     if (!pickerResult.canceled) {
       setPic(pickerResult.assets[0].uri);
-      console.log(pickerResult.assets[0].uri);
       setUploadVisible(false);
     }
   };
@@ -143,7 +142,6 @@ export default function Report() {
 
     if (!pickerResult.canceled) {
       setPic(pickerResult.assets[0].uri);
-      console.log(pickerResult.assets[0].uri);
       setUploadVisible(false);
     }
   };

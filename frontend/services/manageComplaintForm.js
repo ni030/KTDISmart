@@ -49,19 +49,3 @@ export const cancelComplaint = async (complaintid) => {
         console.error("Error cancel complaint:", error.message);
     }
 };
-
-// export const updateForm = async (matric, cat, type, desc, pic) => {
-//     try{
-//         const response = await axios.put(`${DEVICE_IP}:3000/db/complaint/update/${matric}`, {
-//             cat,
-//             type,
-//             desc,
-//             pic
-//         });
-//         if(response.status === 200){
-//             return "Success"
-//         }
-//     }catch(error){
-//         console.error("Error update form:", error.message)
-//     }
-// }
