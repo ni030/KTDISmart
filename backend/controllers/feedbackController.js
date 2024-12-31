@@ -22,12 +22,13 @@ const feedbackController = {
             const [newFeedback] = await req.sql`
                 INSERT INTO feedback (user_id, complaint_id, rate, description)
                 VALUES (${user_id}, ${complaint_id}, ${rate}, ${desc})
+                RETURNING feedback_id
             `;
     
             // Update the complaint status to 'rated'
             await req.sql`
                 UPDATE complaintform
-                SET status = 'rated'
+                SET status = 'rated', feedback_id=${newFeedback.feedback_id}
                 WHERE complaintid = ${complaint_id}
             `;
     
@@ -37,21 +38,6 @@ const feedbackController = {
             res.status(500).json({ message: "Create feedback failed", error: error.message });
         }
     }    
-
-    // updateFeedback: async (req, res) => {
-    //     const { feedback_id } = req.params
-    //     const { rate, desc} = req.body;
-    //     try {
-    //         const response = await req.sql`
-    //         UPDATE feedback 
-    //         SET rate = ${rate}, description = ${desc} 
-    //         WHERE feedback_id = ${feedback_id}`;
-    //         res.status(200).json({ message: "Update Feedback successful" });
-    //     } catch(error) {
-    //         console.error("Error during update feedback:", error);
-    //         res.status(500).json({ message: "Update feedback failed", error: error.message });
-    //     }
-    // }
 }
 
 module.exports = feedbackController

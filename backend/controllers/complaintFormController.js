@@ -77,12 +77,9 @@ const complaintFormController = {
             WHERE status = 'constructor assigned'`;
 
             const currentTime = new Date();
-            console.log(currentTime);
             
 
             for (const complaint of complaints) {
-                console.log(complaint.estimated_time);
-                console.log(complaint.created_time);
                 if (new Date(complaint.estimated_time) < currentTime) {
                     await req.sql`
                     UPDATE complaintform
