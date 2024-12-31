@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Text, ActivityIndicator } from 'react-native';
+import { View, ScrollView, Text } from 'react-native';
 import { Avatar, Card, IconButton, PaperProvider, Appbar, Tooltip, Menu, Divider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import Loader from '../root/Loader';
@@ -47,9 +47,11 @@ const HaveComplaint = ({ complaints = [] }) => {
       : complaints.filter((complaint) =>
           option === 'Completed'
             ? ['completed','rated'].includes(complaint.status)
-            : option === 'Failed to Complete'
-            ? complaint.status === 'incompleted'
-            : ['submitted', 'staff reviewed', 'assigned constructor'].includes(complaint.status)
+            : option === 'Expired'
+            ? ['expired'].includes(complaint.status)
+            : option === 'Cancelled'
+            ? ['cancelled'].includes(complaint.status)
+            : ['submitted', 'staff reviewed', 'constructor assigned'].includes(complaint.status)
         );
     filtered.sort((a, b) =>
       ascending
@@ -86,7 +88,7 @@ const HaveComplaint = ({ complaints = [] }) => {
               />
             }
           >
-            {['Completed', 'Failed to Complete', 'In Progress', 'No Filter'].map((option) => (
+            {['Completed', 'Expired','Cancelled', 'In Progress', 'No Filter'].map((option) => (
               <Menu.Item
                 key={option}
                 onPress={() => handleFilter(option)}
@@ -138,9 +140,13 @@ const HaveComplaint = ({ complaints = [] }) => {
                           iconName = 'check-circle-outline';
                           color = 'green';
                           break;
-                        case 'incompleted':
+                        case 'expired':
                           iconName = 'alert-circle-outline';
                           color = 'red';
+                          break;
+                        case 'cancelled':
+                          iconName = 'archive-outline';
+                          color = 'grey';
                           break;
                         default:
                           iconName = 'clock-time-five-outline';

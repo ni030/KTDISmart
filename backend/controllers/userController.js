@@ -162,43 +162,64 @@ const userController = {
 
     updateUser: async (req, res) => {
 
-        console.log("Updating user...");
-   
-        const { userId } = req.params; // Get userId from URL parameters
-        const { programmecode, email, password, profile_picture } = req.body;
-   
-        try {
-            // If password is provide, hash it
-            let hashedPassword = undefined;
-            if (password) {
-                const saltRounds = 10;
-                hashedPassword = await bcrypt.hash(password, saltRounds);
-            }
-   
-            //then save to db
-            if (password) {
-                const updateCredentialsQuery = `
-                    UPDATE user_credentials
-                    SET password = ${hashedPassword}
-                    WHERE user_id = ${userId}`;
-                await req.sql(updateCredentialsQuery);
-            }
-   
-            const updateProfileQuery = `
-                UPDATE user_profile
-                SET programmecode = ${programmecode ? programmecode : 'programmecode'},
-                    email = ${email ? email : 'email'},
-                    profile_picture = ${profile_picture ? profile_picture : 'profile_picture'}
-                WHERE user_id = ${userId}`;
-            await req.sql(updateProfileQuery);
-   
-            // Respond with a success message
-            res.status(200).json({ message: 'User updated successfully' });
-   
-        } catch (error) {
-            console.error('Error during user update:', error);
-            res.status(500).json({ message: 'Server error', error: error.message });
+        const {username, programmeCode, email, phoneNumber, profilePicture} = req.body;
+        console.log("Updating user....", {username, programmeCode, email, phoneNumber, profilePicture});
+
+       try {
+
+        // Check if user exists
+        const user = await req.sql`SELECT * FROM user_credentials WHERE username = ${username}`;
+
+        if (user.length === 0) {
+            return res.status(404).json({ message: "User not found" });
         }
+
+        
+        // Update email in userCredential
+        const update1 = await req.sql`
+        UPDATE user_credentials 
+        SET email = ${email} 
+        WHERE user_id = ${user[0].user_id}
+        RETURNING *`; // Return the updated row
+
+        console.log("update1 -> " + JSON.stringify(update1));
+
+        //Update programmecode, phoneno, profile pic
+        const update2 = await req.sql`
+        UPDATE user_profile 
+        SET phonenum = ${phoneNumber}, programmecode= ${programmeCode}, profile_picture= ${profilePicture}
+        WHERE user_id = ${user[0].user_id}
+        RETURNING *`; // Return the updated row
+
+        console.log("update2 -> " + JSON.stringify(update2));
+
+        if (update1.length === 0) {
+            console.error("No rows updated. Ensure email matches.");
+            return res
+              .status(400)
+              .json({ message: "Failed to update email", success: false });
+        }
+
+        if (update2.length === 0) {
+            console.error("No rows updated. Ensure data matches.");
+            return res
+              .status(400)
+              .json({ message: "Failed to update data", success: false });
+        }
+        console.log("Data updated successfully.");
+      res
+        .status(200)
+        .json({ message: "Data reset successful", success: true });
+    } catch (error) {
+      console.error("Error during data reset:", error);
+      res
+        .status(500)
+        .json({
+          message: "Server error",
+          error: error.message,
+          success: false,
+        });
+       }  
     }
 
 };

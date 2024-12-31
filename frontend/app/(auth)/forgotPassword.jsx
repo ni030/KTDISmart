@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import passwordService from './../../services/passwordService'; // Ensure this service is correctly implemented
-import { sendOtpEmail} from '../../services/resetPasswordService';
+import otpService from '../../services/otpService';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -15,31 +15,32 @@ const ForgotPassword = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("submit -> " + email)
     setErrorMessage('');
 
     if (!validateEmail(email)) {
+        console.log("invalid email format -> " + email)
         setErrorMessage('Invalid email format');
         return;
     }
 
     try {
+        console.log("calling  checkEmailExistence -> " + email)
         const checkResponse = await passwordService.checkEmailExistence({ email });
+        console.log("checkResponse -> " + JSON.stringify(checkResponse))
 
         if (checkResponse?.exists) {
-          // Trigger sendOtpEmail
-          //console.log("start to send email")
-          //let email="kxxxcatherine822@gmail.com"
+          const otpResponse = await otpService.sendOTP(email);
 
-          //const otpResponse = await sendOtpEmail(email);
-          //console.log("otpr", otpResponse)
-  
-          // if (otpResponse?.success) {
-          //     Alert.alert('Success', otpResponse.message || 'OTP has been sent to your email.');
-          //     // Navigate to the enterOTP page, passing the email as a parameter
-          //     navigation.navigate('enterOTP', { email });
-          // } else {
-          //     setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
-          // }
+          if (otpResponse?.success) {
+            // Show success message
+            Alert.alert('Success', otpResponse.message || 'OTP has been sent to your email.');
+            // Navigate to the OTP input screen, passing the email as a parameter
+            navigation.navigate('enterOTP', { email });
+          } else {
+            // If sending OTP failed
+            setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
+          }
         }
         
     } catch (error) {

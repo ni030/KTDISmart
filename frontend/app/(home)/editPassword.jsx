@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import passwordService from './../../services/passwordService';
 
-const ResetPassword = () => {
+const editPassword = () => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -21,11 +22,11 @@ const ResetPassword = () => {
     }
   
     try {
-      const response = await passwordService.resetPassword({ email, newPassword });
+      const response = await passwordService.editPassword({ email, newPassword });
   
       if (response?.success) {
-        Alert.alert('Success', response.message || 'Password reset successful!');
-        navigation.navigate('login');
+        Alert.alert('Success', response.message || 'Profile updated!');
+        navigation.navigate('Home');
       } else {
         setErrorMessage(response?.message || 'Failed to reset password');
       }
@@ -43,7 +44,14 @@ const ResetPassword = () => {
     >
       <View style={styles.overlay} />
       <View style={styles.container}>
-        <Text style={styles.title}>Reset Password</Text>
+      <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
+          >
+            <FontAwesome name="arrow-left" size={24} color="#fff" />
+      </TouchableOpacity>
+
+        <Text style={styles.title}>Edit Password</Text>
         
         <View style={styles.inputContainer}>
           <TextInput
@@ -87,7 +95,7 @@ const ResetPassword = () => {
 
         {errorMessage ? <Text style={styles.errorText}>{errorMessage}</Text> : null}
         <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
-          <Text style={styles.buttonText}>Reset</Text>
+          <Text style={styles.buttonText}>Confirm Edit Password</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -108,6 +116,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  backButton: {
+    position: 'absolute',
+    top: 70,
+    left: 15,
+    padding: 10,
   },
   title: {
     fontSize: 32,
@@ -158,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ResetPassword;
+export default editPassword;

@@ -26,6 +26,8 @@ const UserProfile = () => {
     fetchUserData();
   }, []);
 
+  const username = user ? user.username : '';
+
   const handleLogout = async () => {
     try {
       await SecureStore.deleteItemAsync('token'); // Clear the token
@@ -71,7 +73,7 @@ const UserProfile = () => {
             <Text style={styles.subtitle}>Undergraduate student | Resident</Text>
             <TouchableOpacity
               style={styles.editProfileButton}
-              onPress={() => navigation.navigate('editProfile')} // Navigate to EditProfile screen
+              onPress={() => navigation.navigate('editProfile',{ username })}//pass username
             >
               <Text style={styles.editProfileText}>Edit Profile</Text>
             </TouchableOpacity>
@@ -94,6 +96,9 @@ const UserProfile = () => {
             </Text>
             <Text style={styles.infoText}>
               Email: <Text style={styles.boldText}>{user ? user.email : 'Loading...'}</Text>
+            </Text>
+            <Text style={styles.infoText}>
+              Phone number: <Text style={styles.boldText}>{user ? user.phonenum : 'Loading...'}</Text>
             </Text>
           </View>
 

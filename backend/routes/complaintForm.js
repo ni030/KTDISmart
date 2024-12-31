@@ -4,6 +4,6 @@ const complaintFormController = require('../controllers/complaintFormController'
 
 router.get('/check/:userId', complaintFormController.getForm)
 router.post('/create', complaintFormController.createForm)
-// router.put('/update/:matricNum', complaintFormController.updateForm)
+router.put('/cancel/:complaintid', complaintFormController.cancelComplaint)
 
 module.exports = router

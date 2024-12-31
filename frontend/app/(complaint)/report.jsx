@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import { TextInput, PaperProvider, Button } from 'react-native-paper';
-import { View, Text, TouchableOpacity, Image, ToastAndroid } from 'react-native';
+import { View, Text, TouchableOpacity, Image, ToastAndroid, ScrollView } from 'react-native';
 import { Dropdown } from 'react-native-paper-dropdown';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker';
-import { ScrollView } from 'react-native-gesture-handler';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import DeclareDialog from '../../components/complaint/declarateDialog';
 import ImageModal from '../../components/complaint/imageModal';
 import { createForm } from '../../services/manageComplaintForm';
@@ -15,26 +13,32 @@ import { useNavigation } from '@react-navigation/native';
 
 
 export default function Report() {
-    
+    const route = useRoute();
+    const {
+        is_resubmit = false, // Default to false
+        parent_id = null, // Default to null
+        prev_complaint = null, // Default to null
+        cat,
+        userId,
+        userInfo,
+      } = route.params || {};
+
     //temp data
-    const [desc, setDesc] = React.useState('');
-    const [dorm, setDorm] = React.useState('MA6 210');
-    const [type, setType] = React.useState('');
-    const [pic,setPic]=React.useState(null);
+    const [desc, setDesc] = React.useState(is_resubmit ? prev_complaint.description : '');
+    const [dorm, setDorm] = React.useState(`${userInfo.block} ${userInfo.roomnumber}`);
+    const [type, setType] = React.useState(is_resubmit ? prev_complaint.defecttype : '');
+    const [pic, setPic] = React.useState(is_resubmit ? prev_complaint.complaintimage : null);
     const [options, setOptions] = React.useState([]);
-    const [uploadVisible,setUploadVisible]=React.useState(true);
-    const [modalVisible,setModalVisible]=React.useState(false);
+    const [uploadVisible, setUploadVisible] = React.useState(!is_resubmit);
+    const [modalVisible, setModalVisible] = React.useState(false);
     const [dialogVisible, setDialogVisible] = React.useState(false);
 
     const navigation = useNavigation();
 
-    const route = useRoute();
-    const { cat, userId, userInfo } = route.params;
-
     const createComplaintForm = async () => {
         console.log("create form")
         // Define the possible statuses
-    const statuses = ["submitted", "staff reviewed", "constructor assigned", "completed", "incompleted", "rated"];
+    const statuses = ["submitted", "staff reviewed", "constructor assigned", "completed", "expired", "rated"];
     
     // Randomly select a status
     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
@@ -53,13 +57,13 @@ export default function Report() {
         createdTime = new Date(currentTime.getTime() - 7 * 24 * 60 * 60 * 1000); // -1 week
         constructorTime = currentTime;
         completedTime = currentTime;
-    } else if (randomStatus === "incompleted") {
+    } else if (randomStatus === "expired") {
         createdTime = new Date(currentTime.getTime() - 7 * 24 * 60 * 60 * 1000); // -1 week
         constructorTime = currentTime;
     }
 
         try{
-          const res = await createForm(userId, cat, type, desc, pic, randomStatus, createdTime, constructorTime, completedTime);
+          const res = await createForm(userId, cat, type, desc, pic, randomStatus, createdTime, constructorTime, completedTime, is_resubmit, parent_id);
           if(res === "Success"){
             ToastAndroid.show('Complaint Submitted Successfully!', ToastAndroid.LONG, ToastAndroid.CENTER);
             navigation.navigate('index');
@@ -150,10 +154,9 @@ export default function Report() {
   };
 
     return (
-        <GestureHandlerRootView>
         <PaperProvider>
-            <ScrollView className="flex-grow-1 bg-primary-500">
-            <SafeAreaView className="pl-5 pr-5 w-screen h-auto">
+        <ScrollView className=" mb-16 bg-primary-500">
+            <SafeAreaView className="pl-5 pr-5 w-screen">
                 
                 {/* <Text className="text-2xl text-white font-bold">Personal Information</Text> */}
                     
@@ -246,6 +249,5 @@ export default function Report() {
             </SafeAreaView>
             </ScrollView>
         </PaperProvider>
-        </GestureHandlerRootView>
     );
 }

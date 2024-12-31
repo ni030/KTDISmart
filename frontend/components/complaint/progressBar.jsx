@@ -9,24 +9,25 @@ const ProgressBar = ({ complaint }) => {
     const statusToStep = {
         submitted: 0,
         'staff reviewed': 1,
-        'assigned constructor': 2,
+        'constructor assigned': 2,
         completed: 3,
         rated: 3,
-        incompleted: 3,
+        expired: 3,
+        'cancelled': 3,
     };
 
     // Determine the current step based on complaint status
     const currentStep = statusToStep[complaint?.status] || 0;
 
     // Determine if the status is incomplete
-    const isIncomplete = complaint?.status === 'incompleted';
+    const isIncomplete = complaint?.status === 'expired'|| complaint?.status === 'cancelled';
 
     // Labels for the steps, dynamically changing the last label based on status
     const labels = [
         'Submitted',
         'Staff Reviewed',
         'Constructor Assigned',
-        isIncomplete ? 'Incomplete' : 'Completed', // Dynamic label
+        complaint?.status === 'cancelled' ? 'Cancelled' : complaint?.status === 'expired' ? 'Expired' : 'Completed', // Dynamic label
     ];
 
     const customStyles = {
