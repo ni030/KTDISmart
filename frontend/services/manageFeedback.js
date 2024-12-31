@@ -30,17 +30,3 @@ export const createFeedback = async (user_id, complaint_id, rate, desc) => {
         console.error("Error create form:", error.message)
     }
 }
-
-export const updateFeedback = async (user_id, complaint_id, rate, desc) => {
-    try{
-        const response = await axios.put(`${DEVICE_IP}:3000/db/feedback/update/${feedback_id}`, {
-            rate,
-            desc
-        });
-        if(response.status === 200){
-            return "Success"
-        }
-    }catch(error){
-        console.error("Error update form:", error.message)
-    }
-}
