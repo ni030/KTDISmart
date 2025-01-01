@@ -32,7 +32,8 @@ const History = () => {
     }
   };
 
-  useEffect(() => {
+  useFocusEffect(
+    React.useCallback(() => {
     const loadData = async () => {
       try {
         const storedUserId = await SecureStore.getItemAsync('userId');
@@ -47,14 +48,7 @@ const History = () => {
       }
     };
     loadData();
-  }, []);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      if (userId) {
-        checkExisting(userId); // Re-fetch data when screen regains focus
-      }
-    }, [userId])
+  }, [])
   );
 
   if (loading) {

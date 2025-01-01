@@ -1,13 +1,12 @@
 const navigationController = {
     saveCurrentLocation: async(req, res) => {
-        const{matricnumber,latitude,longitude}=req.body;
-
+        const{user_id,latitude,longitude}=req.body;
         if(latitude==null||longitude==null){
             res.status(400).json({message: 'Latitude and longitude are required'});
         }
         try{
-            const query = await req.sql`INSERT INTO currentlocation (matricnumber,latitude,longitude) 
-                                        VALUES(${matricnumber},${latitude},${longitude})`;
+            const response = await req.sql`INSERT INTO currentlocation (user_id,latitude,longitude) 
+                                        VALUES(${user_id},${latitude},${longitude})`;
             res.status(200).json({ message: 'User location saved successfully' });
         } catch(error){
             console.error('Error saving user location:', error);
@@ -15,37 +14,27 @@ const navigationController = {
         }
     },
 
-    saveSearchLocation: async(req, res) => {
-        const {matricnumber,latitude,longitude,address}=req.body;
-        if(latitude==null||longitude==null){
+    saveSearchLocation: async (req, res) => {
+        const { user_id, latitude, longitude, address } = req.body;
+        console.log(user_id);
+
+        if (latitude == null || longitude == null) {
             res.status(400).json({ message: 'Latitude and longitude are required' });
+            return;
         }
-        try{
-            const query = await req.sql`INSERT INTO recentsearches (matricnumber,latitude,longitude,address) 
-                                        VALUES(${matricnumber},${latitude},${longitude},${address})`;
-            res.status(200).json({message: 'Search location saved'});
-        } catch(error){
+
+        try {
+            // Using ON CONFLICT to either insert or update
+            const query = await req.sql`
+                INSERT INTO recentsearch (user_id, latitude, longitude, address, searchtime)
+                VALUES (${user_id}, ${latitude}, ${longitude}, ${address}, NOW())
+                ON CONFLICT (user_id, address)
+                DO UPDATE SET searchtime = NOW(), latitude = EXCLUDED.latitude, longitude = EXCLUDED.longitude;
+            `;
+            res.status(200).json({ message: 'Search location saved or updated successfully' });
+        } catch (error) {
             console.error('Error saving search location:', error);
             res.status(500).json({ message: 'Error saving search location' });
-        }
-    },
-
-    fetchSearchLocation: async(req, res) => {
-        const {matricnumber} = req.params;
-        try{
-            const query = await req.sql`SELECT address FROM recentsearches 
-                                        WHERE matricnumber = ${matricnumber} 
-                                        ORDER BY time at DESC 
-                                        LIMIT 3`;
-            if(query.length===0){
-                console.log("Recent searches not found")
-                res.status(404).json({message: "No recent searches for this user"});   
-            }
-            console.log('Recent search locations:',query);
-            res.status(200).json({locations:query});
-        } catch(error){
-            console.log('Error fetching recent searches',error);
-            res.status(500).json({message:'Error fetching recent searches'});
         }
     }
 }

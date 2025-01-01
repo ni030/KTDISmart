@@ -14,7 +14,7 @@ export const checkExistingForm = async (userId) => {
     }
 };
 
-export const createForm = async(userId, cat, type, desc, pic, randomStatus, createdTime, constructorTime, completedTime)=> {
+export const createForm = async(userId, cat, type, desc, pic, randomStatus, createdTime, constructorTime, completedTime, is_resubmit, parent_id)=> {
 
     try{
         const response = await axios.post(`${DEVICE_IP}:3000/db/complaint/create`, {
@@ -26,7 +26,9 @@ export const createForm = async(userId, cat, type, desc, pic, randomStatus, crea
             randomStatus,
             createdTime, 
             constructorTime, 
-            completedTime
+            completedTime,
+            is_resubmit, 
+            parent_id
         });
         if(response.status === 201){
             console.log("create success")
@@ -37,18 +39,13 @@ export const createForm = async(userId, cat, type, desc, pic, randomStatus, crea
     }
 }
 
-// export const updateForm = async (matric, cat, type, desc, pic) => {
-//     try{
-//         const response = await axios.put(`${DEVICE_IP}:3000/db/complaint/update/${matric}`, {
-//             cat,
-//             type,
-//             desc,
-//             pic
-//         });
-//         if(response.status === 200){
-//             return "Success"
-//         }
-//     }catch(error){
-//         console.error("Error update form:", error.message)
-//     }
-// }
+export const cancelComplaint = async (complaintid) => {
+    try {
+        const response = await axios.put(`${DEVICE_IP}:3000/db/complaint/cancel/${complaintid}`);
+        if (response.status == 200) {
+            return "Success"
+        }
+    } catch (error) {
+        console.error("Error cancel complaint:", error.message);
+    }
+};

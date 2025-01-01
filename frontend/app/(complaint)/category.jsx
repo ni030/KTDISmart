@@ -21,7 +21,6 @@ export default function Category(){
           setUserId(storedUserId);
           const response = await authService.getUserById(storedUserId);
           setUserInfo(response.user); // Set userInfo as an object
-          console.log("User info -> ", response.user);
         } else {
           console.log('No userId found');
         }

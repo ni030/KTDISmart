@@ -64,16 +64,9 @@ const HomePage = () => {
       <View>
         {/* Top row with logo and profile icon */}
         <View style={styles.topRow}>
-          <TouchableOpacity style={{padding:16}} onPress={() => navigation.navigate('profile')}>
-          {user && user.profile_picture ? (
-              <Image
-                source={{ uri: user.profile_picture }} // Show the profile picture if available
-                style={styles.profileIcon}
-              />
-            ) : (
-              <FontAwesome name="user-circle" size={35} color="#A1335D" style={styles.profileIcon} />
-            )}
-          </TouchableOpacity>
+        <TouchableOpacity style={{ padding: 16 }} onPress={() => navigation.navigate('profile')}>
+            <FontAwesome name="user-circle" size={35} color="#A1335D" style={styles.profileIcon} />
+        </TouchableOpacity>
           <Image
             source={require('./../../images/subLogo.png')}
             style={styles.logo}

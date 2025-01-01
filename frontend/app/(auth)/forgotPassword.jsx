@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import passwordService from './../../services/passwordService'; // Ensure this service is correctly implemented
+import otpService from '../../services/otpService';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -14,28 +15,34 @@ const ForgotPassword = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("submit -> " + email)
     setErrorMessage('');
 
     if (!validateEmail(email)) {
+        console.log("invalid email format -> " + email)
         setErrorMessage('Invalid email format');
         return;
     }
 
     try {
+        console.log("calling  checkEmailExistence -> " + email)
         const checkResponse = await passwordService.checkEmailExistence({ email });
-        console.log('Check Email Response:', checkResponse.exists); // Log the response
-        if (checkResponse.exists) {
-        //     const otpResponse = await passwordService.sendOTP({ email });
-        //     console.log('Send OTP Response:', otpResponse); // Log the response
-        //     if (otpResponse?.status === 'success') {
-                //Alert.alert('Success', otpResponse.message);
-                navigation.navigate('enterOTP', { email });
-        //     } else {
-        //         setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
-        //     }
-        } else {
-            setErrorMessage('Email not found!');
+        console.log("checkResponse -> " + JSON.stringify(checkResponse))
+
+        if (checkResponse?.exists) {
+          const otpResponse = await otpService.sendOTP(email);
+
+          if (otpResponse?.success) {
+            // Show success message
+            Alert.alert('Success', otpResponse.message || 'OTP has been sent to your email.');
+            // Navigate to the OTP input screen, passing the email as a parameter
+            navigation.navigate('enterOTP', { email });
+          } else {
+            // If sending OTP failed
+            setErrorMessage(otpResponse?.message || 'Failed to send OTP. Please try again.');
+          }
         }
+        
     } catch (error) {
         console.error('Error in handleSubmit:', error); // Log the error
         setErrorMessage(error.message || 'An error occurred. Please try again.');

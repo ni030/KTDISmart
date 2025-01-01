@@ -6,9 +6,9 @@ export default function Layout() {
     <>
     <Stack>
       <Stack.Screen name="index" options={{title: "Complaint History"}}/>
-      <Stack.Screen name="category" options={{headerShown: false}}/>
-      <Stack.Screen name="report" options={{headerShown: false}}/>
-      <Stack.Screen name="progress" options={{headerShown: false}}/>
+      <Stack.Screen name="category" options={{title: "Report Complaint"}}/>
+      <Stack.Screen name="report" options={{title: "Complaint Form"}}/>
+      <Stack.Screen name="progress" options={{title: "Tracking Complaint Status"}}/>
     </Stack>
 
     <BottomNavigationBar />
