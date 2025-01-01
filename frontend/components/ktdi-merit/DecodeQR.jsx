@@ -45,7 +45,6 @@ const DecodeQR = ({userId}) => {
         }
       }
     } catch (error) {
-      console.error('Error picking and scanning image:', error);
       Alert.alert('Error', 'Failed to scan the QR code from the selected image.');
     }
   };

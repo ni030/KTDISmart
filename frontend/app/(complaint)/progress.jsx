@@ -114,7 +114,6 @@ const Progress = () => {
   }, []);
 
   useEffect(()=>{
-    console.log('Complaint status:', complaint.status);
     if(complaint.status=="completed"){
     setDialogVisible(true);
   }},[complaint]);

@@ -38,7 +38,7 @@ export default function Report() {
     const createComplaintForm = async () => {
         console.log("create form")
         // Define the possible statuses
-    const statuses = ["submitted", "staff reviewed", "constructor assigned", "completed", "expired", "rated"];
+    const statuses = ["submitted", "staff reviewed", "constructor assigned", "completed", "expired"];
     
     // Randomly select a status
     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
@@ -121,7 +121,6 @@ export default function Report() {
 
     if (!pickerResult.canceled) {
       setPic(pickerResult.assets[0].uri);
-      console.log(pickerResult.assets[0].uri);
       setUploadVisible(false);
     }
   };
@@ -143,7 +142,6 @@ export default function Report() {
 
     if (!pickerResult.canceled) {
       setPic(pickerResult.assets[0].uri);
-      console.log(pickerResult.assets[0].uri);
       setUploadVisible(false);
     }
   };

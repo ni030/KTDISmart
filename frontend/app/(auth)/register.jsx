@@ -262,7 +262,6 @@ const Register = () => {
   };
 
   return (
-    
     <ImageBackground
       className="w-full h-full"
       source={require('./../../images/rb.png')}
@@ -286,50 +285,64 @@ const Register = () => {
 
               <Text className="text-center font-bold text-gray-700 mb-1">Profile Picture</Text>
 
-              <TextInput
-                className={errors.username ? "border p-4 mb-1 mt-6 rounded" : "border p-4 mb-4 mt-6 rounded"}
-                placeholder="Username"
-                value={formData.username}
-                onChangeText={(value) => setFormData({ ...formData, username: value })}
-              />
-              {errors.username && <Text className="text-red-500 mb-4">{errors.username}</Text>}
+              <View className="relative mb-6 mt-6">
+                <Text className="absolute -top-2 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Username</Text>
+                <TextInput
+                  className={errors.username ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="username"
+                  value={formData.username}
+                  onChangeText={(value) => setFormData({ ...formData, username: value })}
+                />
+                {errors.username && <Text className="text-red-500 mt-1">{errors.username}</Text>}
+              </View>
 
-              <TextInput
-                className={errors.email ? "border p-4 mb-1 rounded" : "border p-4 mb-4 rounded"}
-                placeholder="Email"
-                keyboardType="email-address"
-                value={formData.email}
-                onChangeText={(value) => setFormData({ ...formData, email: value })}
-              />
-              {errors.email && <Text className="text-red-500 mb-4">{errors.email}</Text>}
+              <View className="relative mb-6">
+                <Text className="absolute -top-2 left-4 bg-white px-2 z-10 text-primary-400 font-bold">Email</Text>
+                <TextInput
+                  className={errors.email ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="eg: xxx@gmail.com"
+                  keyboardType="email-address"
+                  value={formData.email}
+                  onChangeText={(value) => setFormData({ ...formData, email: value })}
+                />
+                {errors.email && <Text className="text-red-500 mt-1">{errors.email}</Text>}
+              </View>
 
-              <TextInput
-                className={errors.phone ? "border p-4 mb-1 rounded" : "border p-4 mb-4 rounded"}
-                placeholder="Phone Number"
-                keyboardType="phone-pad"
-                value={formData.phone}
-                onChangeText={(value) => setFormData({ ...formData, phone: value })}
-              />
-              {errors.phone && <Text className="text-red-500 mb-4">{errors.phone}</Text>}
+              <View className="relative mb-6">
+                <Text className="absolute -top-2 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Phone Number</Text>
+                <TextInput
+                  className={errors.phone ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="eg: +60192233445"
+                  keyboardType="phone-pad"
+                  value={formData.phone}
+                  onChangeText={(value) => setFormData({ ...formData, phone: value })}
+                />
+                {errors.phone && <Text className="text-red-500 mt-1">{errors.phone}</Text>}
+              </View>
 
-              <TextInput
-                className={errors.password ? "border p-4 mb-1 rounded" : "border p-4 mb-4 rounded"}
-                placeholder="Password"
-                secureTextEntry
-                value={formData.password}
-                onChangeText={(value) => setFormData({ ...formData, password: value })}
-              />
-              {errors.password && <Text className="text-red-500 mb-4">{errors.password}</Text>}
+              <View className="relative mb-6">
+                <Text className="absolute -top-2 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Password</Text>
+                <TextInput
+                  className={errors.password ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="at least 8 characters"
+                  secureTextEntry
+                  value={formData.password}
+                  onChangeText={(value) => setFormData({ ...formData, password: value })}
+                />
+                {errors.password && <Text className="text-red-500 mt-1">{errors.password}</Text>}
+              </View>
 
-              <TextInput
-                className={errors.confirmPassword ? "border p-4 mb-1 rounded" : "border p-4 mb-9 rounded"}
-                placeholder="Confirm Password"
-                secureTextEntry
-                value={formData.confirmPassword}
-                onChangeText={(value) => setFormData({ ...formData, confirmPassword: value })}
-              />
-              {errors.confirmPassword && <Text className="text-red-500 mb-9">{errors.confirmPassword}</Text>}
-
+              <View className="relative mb-6">
+                <Text className="absolute -top-2 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Confirm Password</Text>
+                <TextInput
+                  className={errors.confirmPassword ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="at least 8 characters"
+                  secureTextEntry
+                  value={formData.confirmPassword}
+                  onChangeText={(value) => setFormData({ ...formData, confirmPassword: value })}
+                />
+                {errors.confirmPassword && <Text className="text-red-500 mt-1">{errors.confirmPassword}</Text>}
+              </View>
 
               <TouchableOpacity onPress={goToNextPage} className="bg-primary-200 p-4 mb-10 rounded">
                 <Text className="text-center text-white font-bold">Next</Text>
@@ -343,45 +356,56 @@ const Register = () => {
 
               <Text className="text-2xl font-bold text-white mb-10 mt-20">Personal Information</Text>
 
-              <TextInput
-                className={errors.name ? "border p-4 mb-1 mt-8 rounded" : "border p-4 mb-4 mt-8 rounded"}
-                placeholder="Name"
-                value={formData.name}
-                onChangeText={(value) => handleInputChange('name', value)}
-              />
-              {errors.name && <Text className="text-red-500 mb-4">{errors.name}</Text>}
+              <View className="relative mb-6 mt-8">
+                <Text className="absolute -top-2 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Full Name</Text>
+                <TextInput
+                  className={errors.name ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="your NRIC full name"
+                  value={formData.name}
+                  onChangeText={(value) => handleInputChange('name', value)}
+                />
+                {errors.name && <Text className="text-red-500 mt-1">{errors.name}</Text>}
+              </View>
 
-              <TextInput
-                className={errors.matricNo ? "border p-4 mb-1 rounded" : "border p-4 mb-4 rounded"}
-                placeholder="Matric Number"
-                value={formData.matricNo}
-                onChangeText={(value) => handleInputChange('matricNo', value)}
-              />
-              {errors.matricNo && <Text className="text-red-500 mb-4">{errors.matricNo}</Text>}
+              <View className="relative mb-6">
+                <Text className="absolute -top-2 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Matric Number</Text>
+                <TextInput
+                  className={errors.matricNo ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="UTM matric number"
+                  value={formData.matricNo}
+                  onChangeText={(value) => handleInputChange('matricNo', value)}
+                />
+                {errors.matricNo && <Text className="text-red-500 mt-1">{errors.matricNo}</Text>}
+              </View>
 
-              <Dropdown
-                label="Gender"
-                mode="outlined"
-                placeholder="Select Gender"
-                hideMenuHeader={true}
-                className="w-11/12"
-                options={OPTIONS}
-                value={formData.gender}
-                onSelect={(value) => {
-                  // Clear the gender error when the user selects a gender
-                  setFormData({ ...formData, gender: value });
-                  setErrors({ ...errors, gender: '' });  // Reset the gender error
-                }}
-              />
-              {errors.gender && <Text className="text-red-500 mb-2 mt-1">{errors.gender}</Text>}
+              <View className="relative mb-8">
+                <Text className="absolute -top-1 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Gender</Text>
+                <Dropdown
+                  label="choose gender"
+                  mode="outlined"
+                  placeholder="Select Gender"
+                  hideMenuHeader={true}
+                  className="w-11/12"
+                  options={OPTIONS}
+                  value={formData.gender}
+                  onSelect={(value) => {
+                    setFormData({ ...formData, gender: value });
+                    setErrors({ ...errors, gender: '' });
+                  }}
+                />
+                {errors.gender && <Text className="text-red-500 mt-1">{errors.gender}</Text>}
+              </View>
 
-              <TextInput
-                className={errors.matricNo ? "border p-4 mb-1 mt-4 rounded" : "border p-4 mb-4 mt-4 rounded"}
-                placeholder="Programme Code"
-                value={formData.programmeCode}
-                onChangeText={(value) => handleInputChange('programmeCode', value)}
-              />
-              {errors.programmeCode && <Text className="text-red-500">{errors.programmeCode}</Text>}
+              <View className="relative mb-6">
+                <Text className="absolute -top-2 left-4 bg-white 1 px-2 z-10 text-primary-400 font-bold">Programme Code</Text>
+                <TextInput
+                  className={errors.programmeCode ? "border p-3 rounded" : "border p-3 rounded"}
+                  placeholder="eg: SECRH"
+                  value={formData.programmeCode}
+                  onChangeText={(value) => handleInputChange('programmeCode', value)}
+                />
+                {errors.programmeCode && <Text className="text-red-500 mt-1">{errors.programmeCode}</Text>}
+              </View>
 
               <TouchableOpacity
                 onPress={handleRegister}

@@ -69,6 +69,11 @@ const EditProfile = () => {
       return;
     }
 
+    if (!validateEmail(email)) {
+      Alert.alert('Error', 'Email must be valid format!');
+      return;
+    }
+
     try {
       const response = await authService.updateUser({
         username,
