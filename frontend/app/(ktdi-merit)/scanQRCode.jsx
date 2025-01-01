@@ -53,7 +53,6 @@ const ScanQRCode = () => {
         setScanned(false);
       }
     } catch (error) {
-      console.error("Error processing QR code:", error);
       ToastAndroid.show("Failed to process QR code.", ToastAndroid.LONG);
       setScanned(false);
     }
