@@ -29,4 +29,4 @@ export const createFeedback = async (user_id, complaint_id, rate, desc) => {
     }catch(error){
         console.error("Error create form:", error.message)
     }
-}
+};
