@@ -39,9 +39,7 @@ const ScanQRCode = () => {
   const handleScanSuccess = async ({ type, data }) => {
     setScanned(true);
     try {
-      console.log("data: ", data);
       const [eventData] = JSON.parse(data);
-      console.log("eventData: ", eventData);
       const result = await recordMerit(userId, eventData);
       console.log(result);
       if (result === "success") {

@@ -23,9 +23,14 @@ const CATEGORY_OPTIONS = [
   { label: "Leadership", value: "Leadership" }
 ];
 
+const AUTH_USERS = [
+  "1a473cd0-9c4d-4a80-bcd6-cfcd2448a430"
+]
+
 const RegisterEvent = () => {
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [permission, setPermission] = useState(false);
 
   const [eventName, setEventName] = useState("");
   const [category, setCategory] = useState("");
@@ -49,9 +54,14 @@ const RegisterEvent = () => {
         const storedUserId = await SecureStore.getItemAsync('userId');
         if (storedUserId) {
           setUserId(storedUserId);
+          if (AUTH_USERS.includes(storedUserId)) {
+            setPermission(true);
+          }
         } else {
           console.log('No userId found');
         }
+
+
       } catch (error) {
         console.error('Error retrieving userId:', error);
       } finally {
@@ -150,6 +160,7 @@ const RegisterEvent = () => {
   return (
     <PaperProvider>
       <SafeAreaView className="bg-white">
+        {permission ? (
         <View className="h-screen w-full py-20 bg-white flex justify-center items-center">
           <View className="w-full h-auto flex flex-row justify-end items-center absolute top-6 z-auto">
             <IconButton
@@ -235,6 +246,14 @@ const RegisterEvent = () => {
 
           </View>
         </View>
+        ):(
+          <View className="h-screen w-full bg-white flex justify-center items-center">
+            <View>
+              <FontAwesome6 name="triangle-exclamation" size={72} color="#702341" />
+            </View>
+            <Text className="font-bold text-3xl text-center text-primary-600 p-4">You are not authorized to access this page</Text>
+          </View>
+        )}
       </SafeAreaView>
     </PaperProvider>
   );
