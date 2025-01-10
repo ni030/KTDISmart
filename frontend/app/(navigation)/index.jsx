@@ -73,7 +73,7 @@ export default function Index() {
                     console.log("User location updated:", { latitude, longitude, address });
 
                     if (userId) {
-                        // saveCurrentLocation(userId, latitude, longitude);
+                        saveCurrentLocation(userId, latitude, longitude);
                     }
                 }
             } catch (error) {

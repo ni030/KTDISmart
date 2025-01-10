@@ -37,7 +37,7 @@ export const createForm = async(userId, cat, type, desc, pic, randomStatus, crea
     }catch(error){
         console.error("Error create form:", error.message)
     }
-}
+};
 
 export const cancelComplaint = async (complaintid) => {
     try {
