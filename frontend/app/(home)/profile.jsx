@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, ImageBackground, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import * as SecureStore from 'expo-secure-store';
@@ -46,9 +46,8 @@ const UserProfile = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <View contentContainerStyle={styles.scrollContent}>
-          {/* Header Section */}
-          <View style={styles.header}>
+        {/* Header Section */}
+        <View style={styles.header}>
             <TouchableOpacity
               style={styles.backButton}
               onPress={() => navigation.goBack()} // Go back to the previous screen
@@ -59,12 +58,15 @@ const UserProfile = () => {
             {user && user.profile_picture ? (
               <Image
                 source={{ uri: user.profile_picture }} // Use the user's profile picture
+                height={110}
+                width={110}
                 style={styles.profileImage}
               />
+              
             ) : (
               <FontAwesome
                 name="user-circle"
-                size={80}
+                size={110}
                 color="#A1335D"
                 style={styles.profileImageFallback}
               />
@@ -79,6 +81,8 @@ const UserProfile = () => {
             </TouchableOpacity>
           </View>
 
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+        
           {/* Student Info Section */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Student Info</Text>
@@ -118,7 +122,7 @@ const UserProfile = () => {
               Key Number: <Text style={styles.boldText}>{user ? user.keynumber : 'Loading...'}</Text>
             </Text>
           </View>
-        </View>
+        </ScrollView>
 
         {/* Bottom Navigation */}
         <View style={styles.bottomNav}>
@@ -138,15 +142,17 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 110,
+    paddingTop: 95,
   },
   scrollContent: {
-    paddingBottom: 80,
+    marginVertical: 10,
+    paddingBottom: 30,
   },
   header: {
     alignItems: 'center',
-    padding: 20,
+    padding: 10,
   },
+
   backButton: {
     position: 'absolute',
     top: -40,
@@ -154,16 +160,16 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   profileImage: {
-    width: 120,
-    height: 120,
+    width: 110,
+    height: 110,
     borderRadius: 60,
-    marginBottom: 10,
+    marginBottom: 4,
   },
   profileImageFallback: {
     marginBottom: 10,
   },
   name: {
-    paddingTop: 3,
+    paddingTop: 2,
     fontSize: 25,
     fontWeight: 'bold',
     color: '#343a40',
@@ -171,10 +177,10 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: '#6c757d',
-    marginTop: 5,
+    marginTop: 3,
   },
   editProfileButton: {
-    marginTop: 15,
+    marginTop: 12,
     paddingVertical: 5,
     paddingHorizontal: 20,
     borderRadius: 20,
@@ -217,6 +223,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  bottomNav: {
+    position: 'fixed',
+    bottom: 15,
+  }
 });
 
 export default UserProfile;
