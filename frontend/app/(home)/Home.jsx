@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   scrollViewContent: {
-    paddingBottom: 50,
+    paddingBottom: 51,
   },
   row: {
     backgroundColor: '#A1335D',
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   arrowIcon: {
-    opacity: 0.7,
+    opacity: 0.8,
   },
 });
 

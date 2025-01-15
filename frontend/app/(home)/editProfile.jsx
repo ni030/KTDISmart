@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     color: '#A1335D',
   },
   form: {
-    marginTop: 15,
+    marginTop: 16,
     marginLeft: 30,
     marginRight: 30,
   },

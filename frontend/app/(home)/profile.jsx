@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: 95,
+    paddingTop: 96,
   },
   scrollContent: {
     marginVertical: 10,
